@@ -3,5 +3,5 @@ plugins {
 }
 
 group = "net.kyori"
-version = "4.8.0-SNAPSHOT"
+version = "5.0.0-SNAPSHOT"
 description = "A user-interface library for Minecraft: Java Edition."
