@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @since 4.0.0
  */
-public interface CompoundBinaryTag extends BinaryTag, CompoundTagSetter<CompoundBinaryTag>, Iterable<Map.Entry<String, ? extends BinaryTag>> {
+public interface CompoundBinaryTag extends BinaryTag, CompoundBinaryTagSetter<CompoundBinaryTag>, Iterable<Map.Entry<String, ? extends BinaryTag>> {
   /**
    * Gets an empty compound tag.
    *
@@ -419,7 +419,7 @@ public interface CompoundBinaryTag extends BinaryTag, CompoundTagSetter<Compound
    *
    * @since 4.0.0
    */
-  interface Builder extends CompoundTagSetter<Builder> {
+  interface Builder extends CompoundBinaryTagSetter<Builder> {
     /**
      * Builds.
      *

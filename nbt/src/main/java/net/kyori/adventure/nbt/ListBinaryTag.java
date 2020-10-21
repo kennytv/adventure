@@ -35,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @since 4.0.0
  */
-public interface ListBinaryTag extends ListTagSetter<ListBinaryTag, BinaryTag>, BinaryTag, Iterable<BinaryTag> {
+public interface ListBinaryTag extends ListBinaryTagSetter<ListBinaryTag, BinaryTag>, BinaryTag, Iterable<BinaryTag> {
   /**
    * Gets an empty list tag.
    *
@@ -544,7 +544,7 @@ public interface ListBinaryTag extends ListTagSetter<ListBinaryTag, BinaryTag>, 
    * @param <T> the element type
    * @since 4.0.0
    */
-  interface Builder<T extends BinaryTag> extends ListTagSetter<Builder<T>, T> {
+  interface Builder<T extends BinaryTag> extends ListBinaryTagSetter<Builder<T>, T> {
     /**
      * Builds.
      *

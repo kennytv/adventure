@@ -32,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <T> the element type
  * @since 4.0.0
  */
-public interface ListTagSetter<R, T extends BinaryTag> {
+public interface ListBinaryTagSetter<R, T extends BinaryTag> {
   /**
    * Adds a tag.
    *
