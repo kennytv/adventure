@@ -32,9 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -46,7 +44,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.translation.Translatable;
 import net.kyori.adventure.util.Buildable;
-import net.kyori.adventure.util.IntFunction2;
 import net.kyori.examination.Examinable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1510,20 +1507,6 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   }
 
   /**
-   * Prevents a cycle between this component and the provided component.
-   *
-   * @param that the other component
-   * @deprecated for removal since 4.7.0, with no replacement - this method is not necessary due to the fact {@code Component}s are immutable
-   * @since 4.0.0
-   */
-  @Deprecated
-  default void detectCycle(final @NonNull Component that) {
-    if(that.contains(this)) {
-      throw new IllegalStateException("Component cycle detected between " + this + " and " + that);
-    }
-  }
-
-  /**
    * Appends a component to this component.
    *
    * @param component the component to append
@@ -1871,142 +1854,6 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    */
   @Contract(pure = true)
   @NonNull Component replaceText(final @NonNull TextReplacementConfig config);
-
-  /**
-   * Finds and replaces text within any {@link Component}s using a string literal.
-   *
-   * @param search a string literal
-   * @param replacement a {@link ComponentLike} to replace each match
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull String search, final @Nullable ComponentLike replacement) {
-    return this.replaceText(b -> b.matchLiteral(search).replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces text within any {@link TextComponent}s using a regex pattern.
-   *
-   * @param pattern a regex pattern
-   * @param replacement a function to replace each match
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull Pattern pattern, final @NonNull Function<TextComponent.Builder, @Nullable ComponentLike> replacement) {
-    return this.replaceText(b -> b.match(pattern).replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces the first occurrence of text within any {@link Component}s using a string literal.
-   *
-   * @param search a string literal
-   * @param replacement a {@link ComponentLike} to replace the first match
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceFirstText(final @NonNull String search, final @Nullable ComponentLike replacement) {
-    return this.replaceText(b -> b.matchLiteral(search).once().replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces the first occurrence of text within any {@link TextComponent}s using a regex pattern.
-   *
-   * @param pattern a regex pattern
-   * @param replacement a function to replace the first match
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceFirstText(final @NonNull Pattern pattern, final @NonNull Function<TextComponent.Builder, @Nullable ComponentLike> replacement) {
-    return this.replaceText(b -> b.match(pattern).once().replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces {@code n} instances of text within any {@link TextComponent}s using a string literal.
-   *
-   * @param search a string literal
-   * @param replacement a {@link ComponentLike} to replace the first match
-   * @param numberOfReplacements the amount of matches that should be replaced
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull String search, final @Nullable ComponentLike replacement, final int numberOfReplacements) {
-    return this.replaceText(b -> b.matchLiteral(search).times(numberOfReplacements).replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces {@code n} instances of text within any {@link TextComponent}s using a regex pattern.
-   *
-   * @param pattern a regex pattern
-   * @param replacement a function to replace each match
-   * @param numberOfReplacements the amount of matches that should be replaced
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull Pattern pattern, final @NonNull Function<TextComponent.Builder, @Nullable ComponentLike> replacement, final int numberOfReplacements) {
-    return this.replaceText(b -> b.match(pattern).times(numberOfReplacements).replacement(replacement));
-  }
-
-  /**
-   * Finds and replaces {@code n} instances of text within any {@link TextComponent}s using a string literal.
-   *
-   * <p>Utilises an {@link IntFunction2} to determine if each instance should be replaced.</p>
-   *
-   * @param search a string literal
-   * @param replacement a {@link ComponentLike} to replace the first match
-   * @param fn a function of (index, replaced) used to determine if matches should be replaced, where "replaced" is the number of successful replacements
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull String search, final @Nullable ComponentLike replacement, final @NonNull IntFunction2<PatternReplacementResult> fn) {
-    return this.replaceText(b -> b.matchLiteral(search).replacement(replacement).condition(fn));
-  }
-
-  /**
-   * Finds and replaces text using a regex pattern.
-   *
-   * <p>Utilises an {@link IntFunction2} to determine if each instance should be replaced.</p>
-   *
-   * @param pattern a regex pattern
-   * @param replacement a function to replace the first match
-   * @param fn a function of (index, replaced) used to determine if matches should be replaced, where "replaced" is the number of successful replacements
-   * @return a modified copy of this component
-   * @since 4.0.0
-   * @deprecated for removal since 4.2.0, use {@link #replaceText(Consumer)} or {@link #replaceText(TextReplacementConfig)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(pure = true)
-  @Deprecated
-  default @NonNull Component replaceText(final @NonNull Pattern pattern, final @NonNull Function<TextComponent.Builder, @Nullable ComponentLike> replacement, final @NonNull IntFunction2<PatternReplacementResult> fn) {
-    return this.replaceText(b -> b.match(pattern).replacement(replacement).condition(fn));
-  }
 
   @Override
   default void componentBuilderApply(final @NonNull ComponentBuilder<?, ?> component) {

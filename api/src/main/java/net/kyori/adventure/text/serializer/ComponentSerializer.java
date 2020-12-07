@@ -55,23 +55,6 @@ public interface ComponentSerializer<I extends Component, O extends Component, R
    *
    * @param input the input
    * @return the component if {@code input} is non-null, otherwise {@code null}
-   * @since 4.7.0
-   * @deprecated for removal since 4.8.0, use {@link #deserializeOrNull(Object)} instead.
-   */
-  @ApiStatus.ScheduledForRemoval
-  @Contract(value = "!null -> !null; null -> null", pure = true)
-  @Deprecated
-  default @PolyNull O deseializeOrNull(final @PolyNull R input) {
-    return this.deserializeOrNull(input);
-  }
-
-  /**
-   * Deserialize a component from input of type {@code R}.
-   *
-   * <p>If {@code input} is {@code null}, then {@code null} will be returned.</p>
-   *
-   * @param input the input
-   * @return the component if {@code input} is non-null, otherwise {@code null}
    * @since 4.8.0
    */
   @Contract(value = "!null -> !null; null -> null", pure = true)
