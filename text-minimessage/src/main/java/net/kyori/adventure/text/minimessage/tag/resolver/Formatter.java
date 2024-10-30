@@ -147,18 +147,25 @@ public final class Formatter {
   /**
    * Creates a replacement that inserts a list of components. These components are joined together by {@link Component#join(JoinConfiguration.Builder, ComponentLike...)}.
    *
-   * <p>This tag expects a separator as the first argument. A last separator may optionally be provided.</p>
+   * <p>This tag has three optional arguments; a separator, a last separator, and a last separator if serial.
+   * Each argument must be provided in order, with all preceding arguments present.
+   * The exact use of these three separators is documented in {@link JoinConfiguration}.</p>
    *
    * <p>This replacement is auto-closing, so its style will not influence the style of following components.</p>
    *
    * @param key the key
    * @param components the components to join
    * @return the placeholder
-   * @since 4.15.0
+   * @see JoinConfiguration
+   * @since 4.18.0
    */
   public static TagResolver joining(@TagPattern final @NotNull String key, final @NotNull Iterable<? extends ComponentLike> components) {
     return TagResolver.resolver(key, (argumentQueue, context) -> {
-      final String separator = argumentQueue.popOr("Separator expected.").value();
+      if (!argumentQueue.hasNext()) {
+        return Tag.inserting(Component.join(JoinConfiguration.noSeparators(), components));
+      }
+
+      final String separator = argumentQueue.pop().value();
       final JoinConfiguration.Builder configBuilder = JoinConfiguration.builder().separator(context.deserialize(separator));
 
       if (argumentQueue.hasNext()) {
@@ -179,14 +186,17 @@ public final class Formatter {
   /**
    * Creates a replacement that inserts a list of components. These components are joined together by {@link Component#join(JoinConfiguration.Builder, ComponentLike...)}.
    *
-   * <p>This tag expects a separator as the first argument. A last separator may optionally be provided.</p>
+   * <p>This tag has three optional arguments; a separator, a last separator, and a last separator if serial.
+   * Each argument must be provided in order, with all preceding arguments present.
+   * The exact use of these three separators is documented in {@link JoinConfiguration}.</p>
    *
    * <p>This replacement is auto-closing, so its style will not influence the style of following components.</p>
    *
    * @param key the key
    * @param components the components to join
    * @return the placeholder
-   * @since 4.15.0
+   * @see JoinConfiguration
+   * @since 4.18.0
    */
   public static TagResolver joining(@TagPattern final @NotNull String key, final @NotNull ComponentLike@NotNull... components) {
     return joining(key, Arrays.asList(components));
