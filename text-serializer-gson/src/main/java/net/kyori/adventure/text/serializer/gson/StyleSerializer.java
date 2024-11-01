@@ -40,6 +40,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -58,6 +59,7 @@ import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HO
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HOVER_EVENT_CONTENTS;
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HOVER_EVENT_VALUE;
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.INSERTION;
+import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.SHADOW_COLOR;
 
 final class StyleSerializer extends TypeAdapter<Style> {
   @SuppressWarnings("checkstyle:NoWhitespaceAfter")
@@ -264,6 +266,12 @@ final class StyleSerializer extends TypeAdapter<Style> {
     if (color != null) {
       out.name(COLOR);
       this.gson.toJson(color, SerializerFactory.COLOR_TYPE, out);
+    }
+
+    final @Nullable ShadowColor shadowColor = value.shadowColor();
+    if (shadowColor != null) {
+      out.name(SHADOW_COLOR);
+      this.gson.toJson(shadowColor, SerializerFactory.SHADOW_COLOR_TYPE, out);
     }
 
     final @Nullable String insertion = value.insertion();

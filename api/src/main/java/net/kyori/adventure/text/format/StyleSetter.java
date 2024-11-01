@@ -74,6 +74,24 @@ public interface StyleSetter<T extends StyleSetter<?>> {
   @NotNull T colorIfAbsent(final @Nullable TextColor color);
 
   /**
+   * Sets the shadow color.
+   *
+   * @param color the color
+   * @return an object ({@code T})
+   * @since 4.18.0
+   */
+  @NotNull T shadowColor(final @Nullable ShadowColor color);
+
+  /**
+   * Sets the shadow color if there isn't one set already.
+   *
+   * @param color the color
+   * @return an object ({@code T})
+   * @since 4.18.0
+   */
+  @NotNull T shadowColorIfAbsent(final @Nullable ShadowColor color);
+
+  /**
    * Sets the state of {@code decoration} to {@link TextDecoration.State#TRUE}.
    *
    * @param decoration the decoration

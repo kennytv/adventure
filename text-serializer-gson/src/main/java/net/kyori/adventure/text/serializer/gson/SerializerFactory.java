@@ -34,6 +34,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -52,6 +53,7 @@ final class SerializerFactory implements TypeAdapterFactory {
   static final Class<String> STRING_TYPE = String.class;
   static final Class<TextColorWrapper> COLOR_WRAPPER_TYPE = TextColorWrapper.class;
   static final Class<TextColor> COLOR_TYPE = TextColor.class;
+  static final Class<ShadowColor> SHADOW_COLOR_TYPE = ShadowColor.class;
   static final Class<TextDecoration> TEXT_DECORATION_TYPE = TextDecoration.class;
   static final Class<BlockNBTComponent.Pos> BLOCK_NBT_POS_TYPE = BlockNBTComponent.Pos.class;
   static final Class<UUID> UUID_TYPE = UUID.class;
@@ -87,6 +89,8 @@ final class SerializerFactory implements TypeAdapterFactory {
       return (TypeAdapter<T>) TextColorWrapper.Serializer.INSTANCE;
     } else if (COLOR_TYPE.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) (this.features.value(JSONOptions.EMIT_RGB) ? TextColorSerializer.INSTANCE : TextColorSerializer.DOWNSAMPLE_COLOR);
+    } else if (SHADOW_COLOR_TYPE.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) ShadowColorSerializer.INSTANCE;
     } else if (TEXT_DECORATION_TYPE.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) TextDecorationSerializer.INSTANCE;
     } else if (BLOCK_NBT_POS_TYPE.isAssignableFrom(rawType)) {

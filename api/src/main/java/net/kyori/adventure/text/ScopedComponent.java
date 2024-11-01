@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -105,6 +106,18 @@ public interface ScopedComponent<C extends Component> extends Component {
   @SuppressWarnings("unchecked")
   default @NotNull C colorIfAbsent(final @Nullable TextColor color) {
     return (C) Component.super.colorIfAbsent(color);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C shadowColor(final @Nullable ShadowColor color) {
+    return (C) Component.super.shadowColor(color);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C shadowColorIfAbsent(final @Nullable ShadowColor color) {
+    return (C) Component.super.shadowColorIfAbsent(color);
   }
 
   @Override

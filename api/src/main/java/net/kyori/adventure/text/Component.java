@@ -45,6 +45,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import net.kyori.adventure.text.format.StyleGetter;
@@ -2189,6 +2190,11 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
     return this.style().color();
   }
 
+  @Override
+  default @Nullable ShadowColor shadowColor() {
+    return this.style().shadowColor();
+  }
+
   /**
    * Sets the color of this component.
    *
@@ -2213,6 +2219,33 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   @Override
   default @NotNull Component colorIfAbsent(final @Nullable TextColor color) {
     if (this.color() == null) return this.color(color);
+    return this;
+  }
+
+  /**
+   * Sets the shadow color of this component.
+   *
+   * @param color the color
+   * @return a component
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  @Override
+  default @NotNull Component shadowColor(final @Nullable ShadowColor color) {
+    return this.style(this.style().shadowColor(color));
+  }
+
+  /**
+   * Sets the shadow color if there isn't one set already.
+   *
+   * @param color the color
+   * @return a component
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  @Override
+  default @NotNull Component shadowColorIfAbsent(final @Nullable ShadowColor color) {
+    if (this.shadowColor() == null) return this.shadowColorIfAbsent(color);
     return this;
   }
 
