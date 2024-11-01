@@ -32,10 +32,39 @@ public interface ShadowColor extends StyleBuilderApplicable {
     return new ShadowColorImpl(value);
   }
 
+  @Contract(pure = true)
+  static ShadowColor fromHexString(String value) {
+    if (value.startsWith("#")) {
+      value = value.substring(1);
+    }
+    if (value.length() != 8) {
+      return null;
+    }
+    try {
+      int r = Integer.parseInt(value.substring(0, 2), 16);
+      int g = Integer.parseInt(value.substring(2, 4), 16);
+      int b = Integer.parseInt(value.substring(4, 6), 16);
+      int a = Integer.parseInt(value.substring(6, 8), 16);
+      return new ShadowColorImpl((a << 24) | (r << 16) | (g << 8) | b);
+    } catch (NumberFormatException ignored) {
+      return null;
+    }
+  }
+
+  @NotNull
+  default String asHexString() {
+    int argb = value();
+    int a = (argb >> 24) & 0xFF;
+    int r = (argb >> 16) & 0xFF;
+    int g = (argb >> 8) & 0xFF;
+    int b = argb & 0xFF;
+    return String.format("#%02X%02X%02X%02X", r, g, b, a);
+  }
+
   int value();
 
   @Override
   default void styleApply(final Style.@NotNull Builder style) {
-    style.color(this);
+    style.shadowColor(this);
   }
 }
