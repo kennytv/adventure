@@ -36,6 +36,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * Represents an in-game bossbar which can be shown to the client.
+ *
  * <p>A bossbar consists of:</p>
  * <dl>
  *   <dt>name</dt>
