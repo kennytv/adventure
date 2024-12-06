@@ -64,23 +64,58 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
   }
 
   /**
-   * Create a new shadow color from an existing colour plus an alpha value.
+   * Create a new shadow color from individual red, green, blue, and alpha values.
+   *
+   * @param red the red value
+   * @param green the green value
+   * @param blue the blue value
+   * @param alpha the alpha
+   * @return a shadow colour
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  static @NotNull ShadowColor shadowColor(
+    final @Range(from = 0x0, to = 0xff) int red,
+    final @Range(from = 0x0, to = 0xff) int green,
+    final @Range(from = 0x0, to = 0xff) int blue,
+    final @Range(from = 0x0, to = 0xff) int alpha
+  ) {
+    final int value =
+      (alpha & 0xff) << 24
+        | (red & 0xff) << 16
+        | (green & 0xff) << 8
+        | (blue & 0xff);
+
+    if (value == ShadowColorImpl.NONE_VALUE) return none();
+    return new ShadowColorImpl(value);
+  }
+
+  /**
+   * Create a shadow color from an existing colour plus an alpha value.
    *
    * @param color the existing color
    * @param alpha the alpha
-   * @return a new shadow colour
+   * @return a shadow colour
    * @since 4.18.0
    */
   @Contract(pure = true)
   static @NotNull ShadowColor shadowColor(final @NotNull RGBLike color, final @Range(from = 0x0, to = 0xff) int alpha) {
-    final int value =
-      (alpha & 0xff) << 24
-        | (color.red() & 0xff) << 16
-        | (color.green() & 0xff) << 8
-        | (color.blue() & 0xff);
+    return shadowColor(color.red(), color.green(), color.blue(), alpha);
+  }
 
-    if (value == ShadowColorImpl.NONE_VALUE) return none();
-    return new ShadowColorImpl(value);
+  /**
+   * Create a shadow color from an existing ARGB colour.
+   *
+   * @param argb the existing color
+   * @return a shadow colour
+   * @since 4.18.0
+   */
+  static @NotNull ShadowColor shadowColor(final @NotNull ARGBLike argb) {
+    if (argb instanceof ShadowColor) {
+      return (ShadowColor) argb;
+    }
+
+    return shadowColor(argb.red(), argb.green(), argb.blue(), argb.alpha());
   }
 
   /**

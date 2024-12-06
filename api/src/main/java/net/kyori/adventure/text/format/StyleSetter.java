@@ -32,6 +32,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.util.ARGBLike;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +81,7 @@ public interface StyleSetter<T extends StyleSetter<?>> {
    * @return an object ({@code T})
    * @since 4.18.0
    */
-  @NotNull T shadowColor(final @Nullable ShadowColor color);
+  @NotNull T shadowColor(final @Nullable ARGBLike color);
 
   /**
    * Sets the shadow color if there isn't one set already.
@@ -89,7 +90,7 @@ public interface StyleSetter<T extends StyleSetter<?>> {
    * @return an object ({@code T})
    * @since 4.18.0
    */
-  @NotNull T shadowColorIfAbsent(final @Nullable ShadowColor color);
+  @NotNull T shadowColorIfAbsent(final @Nullable ARGBLike color);
 
   /**
    * Sets the state of {@code decoration} to {@link TextDecoration.State#TRUE}.

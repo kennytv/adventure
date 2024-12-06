@@ -28,10 +28,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
-import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.util.ARGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,13 +110,13 @@ public interface ScopedComponent<C extends Component> extends Component {
 
   @Override
   @SuppressWarnings("unchecked")
-  default @NotNull C shadowColor(final @Nullable ShadowColor color) {
+  default @NotNull C shadowColor(final @Nullable ARGBLike color) {
     return (C) Component.super.shadowColor(color);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  default @NotNull C shadowColorIfAbsent(final @Nullable ShadowColor color) {
+  default @NotNull C shadowColorIfAbsent(final @Nullable ARGBLike color) {
     return (C) Component.super.shadowColorIfAbsent(color);
   }
 

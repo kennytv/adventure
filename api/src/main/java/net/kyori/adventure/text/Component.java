@@ -54,6 +54,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.translation.Translatable;
+import net.kyori.adventure.util.ARGBLike;
 import net.kyori.adventure.util.ForwardingIterator;
 import net.kyori.adventure.util.IntFunction2;
 import net.kyori.adventure.util.MonkeyBars;
@@ -2231,7 +2232,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    */
   @Contract(pure = true)
   @Override
-  default @NotNull Component shadowColor(final @Nullable ShadowColor color) {
+  default @NotNull Component shadowColor(final @Nullable ARGBLike color) {
     return this.style(this.style().shadowColor(color));
   }
 
@@ -2244,8 +2245,8 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    */
   @Contract(pure = true)
   @Override
-  default @NotNull Component shadowColorIfAbsent(final @Nullable ShadowColor color) {
-    if (this.shadowColor() == null) return this.shadowColorIfAbsent(color);
+  default @NotNull Component shadowColorIfAbsent(final @Nullable ARGBLike color) {
+    if (this.shadowColor() == null) return this.shadowColor(color);
     return this;
   }
 

@@ -33,10 +33,10 @@ import java.util.function.Function;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
-import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.util.ARGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -239,14 +239,14 @@ abstract class AbstractComponentBuilder<C extends BuildableComponent<C, B>, B ex
 
   @Override
   @SuppressWarnings("unchecked")
-  public @NotNull B shadowColor(final @Nullable ShadowColor color) {
+  public @NotNull B shadowColor(final @Nullable ARGBLike color) {
     this.styleBuilder().shadowColor(color);
     return (B) this;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public @NotNull B shadowColorIfAbsent(final @Nullable ShadowColor color) {
+  public @NotNull B shadowColorIfAbsent(final @Nullable ARGBLike color) {
     this.styleBuilder().shadowColorIfAbsent(color);
     return (B) this;
   }

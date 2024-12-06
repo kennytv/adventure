@@ -33,6 +33,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.util.ARGBLike;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,13 +105,13 @@ final class StyleImpl implements Style {
   }
 
   @Override
-  public @NotNull Style shadowColor(final @Nullable ShadowColor color) {
+  public @NotNull Style shadowColor(final @Nullable ARGBLike color) {
     if (Objects.equals(this.shadowColor, color)) return this;
-    return new StyleImpl(this.font, this.color, color, this.decorations, this.clickEvent, this.hoverEvent, this.insertion);
+    return new StyleImpl(this.font, this.color, color == null ? null : ShadowColor.shadowColor(color), this.decorations, this.clickEvent, this.hoverEvent, this.insertion);
   }
 
   @Override
-  public @NotNull Style shadowColorIfAbsent(final @Nullable ShadowColor color) {
+  public @NotNull Style shadowColorIfAbsent(final @Nullable ARGBLike color) {
     if (this.shadowColor == null) {
       return this.shadowColor(color);
     }
@@ -348,15 +349,15 @@ final class StyleImpl implements Style {
     }
 
     @Override
-    public @NotNull Builder shadowColor(final @Nullable ShadowColor color) {
-      this.shadowColor = color;
+    public @NotNull Builder shadowColor(final @Nullable ARGBLike color) {
+      this.shadowColor = color == null ? null : ShadowColor.shadowColor(color);
       return this;
     }
 
     @Override
-    public @NotNull Builder shadowColorIfAbsent(final @Nullable ShadowColor color) {
+    public @NotNull Builder shadowColorIfAbsent(final @Nullable ARGBLike color) {
       if (this.shadowColor == null) {
-        this.shadowColor = color;
+        this.shadowColor = color == null ? null : ShadowColor.shadowColor(color);
       }
       return this;
     }
