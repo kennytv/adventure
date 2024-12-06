@@ -23,9 +23,12 @@
  */
 package net.kyori.adventure.text.format;
 
+import net.kyori.adventure.util.ARGBLike;
+import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 /**
  * A shadow color which may be applied to a {@link Style}.
@@ -35,16 +38,48 @@ import org.jetbrains.annotations.Nullable;
  * @since 4.18.0
  * @sinceMinecraft 1.21.4
  */
-public interface ShadowColor extends StyleBuilderApplicable {
+public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
+  /**
+   * Return a shadow colour that will disable the shadow on a component.
+   *
+   * @return a disabling shadow color
+   * @since 4.18.0
+   */
+  static @NotNull ShadowColor none() {
+    return ShadowColorImpl.NONE;
+  }
+
   /**
    * Create a new shadow color from the ARGB value packed in an int.
    *
    * @param value the int-packed ARGB value
+   * @return a shadow color
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  static @NotNull ShadowColor shadowColor(final @Range(from = 0x00, to = 0xffffffffL) int value) {
+    if (value == ShadowColorImpl.NONE_VALUE) return none();
+
+    return new ShadowColorImpl(value);
+  }
+
+  /**
+   * Create a new shadow color from an existing colour plus an alpha value.
+   *
+   * @param color the existing color
+   * @param alpha the alpha
    * @return a new shadow colour
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @NotNull ShadowColor shadowColor(final int value) {
+  static @NotNull ShadowColor shadowColor(final @NotNull RGBLike color, final @Range(from = 0x0, to = 0xff) int alpha) {
+    final int value =
+      (alpha & 0xff) << 24
+        | (color.red() & 0xff) << 16
+        | (color.green() & 0xff) << 8
+        | (color.blue() & 0xff);
+
+    if (value == ShadowColorImpl.NONE_VALUE) return none();
     return new ShadowColorImpl(value);
   }
 
@@ -91,6 +126,50 @@ public interface ShadowColor extends StyleBuilderApplicable {
     final int g = (argb >> 8) & 0xFF;
     final int b = argb & 0xFF;
     return String.format("#%02X%02X%02X%02X", r, g, b, a);
+  }
+
+  /**
+   * Get the red component of the shadow colour.
+   *
+   * @return the red component, in the range [0x0, 0xff]
+   * @since 4.18.0
+   */
+  @Override
+  default @Range(from = 0x0, to = 0xff) int red() {
+    return (this.value() >> 16) & 0xff;
+  }
+
+  /**
+   * Get the green component of the shadow colour.
+   *
+   * @return the green component, in the range [0x0, 0xff]
+   * @since 4.18.0
+   */
+  @Override
+  default @Range(from = 0x0, to = 0xff) int green() {
+    return (this.value() >> 8) & 0xff;
+  }
+
+  /**
+   * Get the blue component of the shadow colour.
+   *
+   * @return the blue component, in the range [0x0, 0xff]
+   * @since 4.18.0
+   */
+  @Override
+  default @Range(from = 0x0, to = 0xff) int blue() {
+    return this.value() & 0xff;
+  }
+
+  /**
+   * Get the alpha component of the shadow colour.
+   *
+   * @return the blue component, in the range [0x0, 0xff]
+   * @since 4.18.0
+   */
+  @Override
+  default @Range(from = 0x0, to = 0xff) int alpha() {
+    return (this.value() >> 24) & 0xff;
   }
 
   /**

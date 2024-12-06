@@ -21,20 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.adventure.text.format;
+package net.kyori.adventure.util;
 
-final class ShadowColorImpl implements ShadowColor {
-  static final int NONE_VALUE = 0;
-  static final ShadowColorImpl NONE = new ShadowColorImpl(NONE_VALUE);
+import org.jetbrains.annotations.Range;
 
-  private final int value;
-
-  ShadowColorImpl(final int value) {
-    this.value = value;
-  }
-
-  @Override
-  public int value() {
-    return this.value;
-  }
+/**
+ * Something that can provide red, green, and blue, and alpha colour components.
+ *
+ * @since 4.18.0
+ */
+public interface ARGBLike extends RGBLike {
+  /**
+   * Gets the alpha component.
+   *
+   * @return the alpha component
+   * @since 4.18.0
+   */
+  @Range(from = 0x0, to = 0xff) int alpha();
 }
