@@ -25,6 +25,7 @@ package net.kyori.adventure.text.format;
 
 import net.kyori.adventure.util.ARGBLike;
 import net.kyori.adventure.util.RGBLike;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,36 @@ import org.jetbrains.annotations.Range;
  */
 public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
   /**
-   * Return a shadow colour that will disable the shadow on a component.
+   * Linearly interpolates between {@code a} and {@code b} by {@code t}.
+   *
+   * <p>This returns a color blended between color {@code a}, at {@code t=0.0}, and color {@code b}, at {@code t=1.0}.</p>
+   *
+   * @param t the interpolation value, between {@code 0.0} and {@code 1.0} (both inclusive)
+   * @param a the lower bound ({@code t=0.0})
+   * @param b the upper bound ({@code t=1.0})
+   * @return the interpolated value, a color between the two input colors {@code a} and {@code b}
+   * @since 4.18.0
+   */
+  static @NotNull ShadowColor lerp(final float t, final @NotNull ARGBLike a, final @NotNull ARGBLike b) {
+    final float clampedT = Math.min(1.0f, Math.max(0.0f, t)); // clamp between 0 and 1
+    final int ar = a.red();
+    final int br = b.red();
+    final int ag = a.green();
+    final int bg = b.green();
+    final int ab = a.blue();
+    final int bb = b.blue();
+    final int aa = a.alpha();
+    final int ba = b.alpha();
+    return shadowColor(
+      Math.round(ar + clampedT * (br - ar)),
+      Math.round(ag + clampedT * (bg - ag)),
+      Math.round(ab + clampedT * (bb - ab)),
+      Math.round(aa + clampedT * (ba - aa))
+    );
+  }
+
+  /**
+   * Return a shadow color that will disable the shadow on a component.
    *
    * @return a disabling shadow color
    * @since 4.18.0
@@ -52,12 +82,14 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
   /**
    * Create a new shadow color from the ARGB value packed in an int.
    *
+   * <p>This int will be in the format {@code 0xAARRGGBB}</p>
+   *
    * @param value the int-packed ARGB value
    * @return a shadow color
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @NotNull ShadowColor shadowColor(final @Range(from = 0x00, to = 0xffffffffL) int value) {
+  static @NotNull ShadowColor shadowColor(final int value) {
     if (value == ShadowColorImpl.NONE_VALUE) return none();
 
     return new ShadowColorImpl(value);
@@ -121,25 +153,22 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
   /**
    * Attempt to parse a shadow colour from a {@code #}-prefixed hex string.
    *
-   * <p>This string should be in the format {@code #RRGGBBAA}</p>
+   * <p>This string must be in the format {@code #RRGGBBAA}</p>
    *
    * @param value the input value
    * @return a shadow color if possible, or null if any components are invalid
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @Nullable ShadowColor fromHexString(@NotNull String value) {
-    if (value.startsWith("#")) {
-      value = value.substring(1);
-    }
-    if (value.length() != 8) {
-      return null;
-    }
+  static @Nullable ShadowColor fromHexString(@Pattern("#[0-9a-fA-F]{8}") final @NotNull String value) {
+    if (value.length() != 9) return null;
+    if (!value.startsWith("#")) return null;
+
     try {
-      final int r = Integer.parseInt(value.substring(0, 2), 16);
-      final int g = Integer.parseInt(value.substring(2, 4), 16);
-      final int b = Integer.parseInt(value.substring(4, 6), 16);
-      final int a = Integer.parseInt(value.substring(6, 8), 16);
+      final int r = Integer.parseInt(value.substring(1, 3), 16);
+      final int g = Integer.parseInt(value.substring(3, 5), 16);
+      final int b = Integer.parseInt(value.substring(5, 7), 16);
+      final int a = Integer.parseInt(value.substring(7, 9), 16);
       return new ShadowColorImpl((a << 24) | (r << 16) | (g << 8) | b);
     } catch (NumberFormatException ignored) {
       return null;

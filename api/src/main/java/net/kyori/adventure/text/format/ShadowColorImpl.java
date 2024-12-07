@@ -23,7 +23,15 @@
  */
 package net.kyori.adventure.text.format;
 
-final class ShadowColorImpl implements ShadowColor {
+import java.util.Objects;
+import java.util.stream.Stream;
+import net.kyori.adventure.internal.Internals;
+import net.kyori.examination.Examinable;
+import net.kyori.examination.ExaminableProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+final class ShadowColorImpl implements ShadowColor, Examinable {
   static final int NONE_VALUE = 0;
   static final ShadowColorImpl NONE = new ShadowColorImpl(NONE_VALUE);
 
@@ -36,5 +44,29 @@ final class ShadowColorImpl implements ShadowColor {
   @Override
   public int value() {
     return this.value;
+  }
+
+  @Override
+  public boolean equals(final @Nullable Object other) {
+    if (!(other instanceof ShadowColorImpl)) return false;
+    final ShadowColorImpl that = (ShadowColorImpl) other;
+    return this.value == that.value;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.value);
+  }
+
+  @Override
+  public String toString() {
+    return Internals.toString(this);
+  }
+
+  @Override
+  public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
+    return Stream.of(
+      ExaminableProperty.of("value", this.value)
+    );
   }
 }

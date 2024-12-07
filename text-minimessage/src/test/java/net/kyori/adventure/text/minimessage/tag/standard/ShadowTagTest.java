@@ -24,17 +24,37 @@
 package net.kyori.adventure.text.minimessage.tag.standard;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.minimessage.AbstractTest;
 import org.junit.jupiter.api.Test;
 
 class ShadowTagTest extends AbstractTest {
+  @Test
+  void testRoundtripNamedShadow() {
+    final String input = "<shadow:red:0.8>i have a red shadow";
+    final Component expected = Component.text("i have a red shadow")
+      .shadowColor(ShadowColor.shadowColor(NamedTextColor.RED, 0xCC));
+
+    this.assertParsedEquals(expected, input);
+    this.assertSerializedEquals(input, expected);
+  }
+
+  @Test
+  void testParseHexComponentShadow() {
+    final String input = "<shadow:#FF0000:0.8>i have a redder shadow";
+    final Component expected = Component.text("i have a redder shadow")
+      .shadowColor(ShadowColor.shadowColor(0xFF, 0, 0, 0xCC));
+
+    this.assertParsedEquals(expected, input);
+  }
 
   @Test
   void testSerializeShadow() {
     final String expected = "<shadow:#054D79FF>This is a test";
 
-    final Component builder = Component.text("This is a test").shadowColor(ShadowColor.shadowColor(-16429703));
+    final Component builder = Component.text("This is a test")
+      .shadowColor(ShadowColor.shadowColor(0xff_05_4d_79));
 
     this.assertSerializedEquals(expected, builder);
     this.assertParsedEquals(builder, expected);
@@ -45,7 +65,8 @@ class ShadowTagTest extends AbstractTest {
     final String expected = "<shadow:#054D79FF>This is a</shadow> test";
 
     final Component builder = Component.text()
-      .append(Component.text("This is a").shadowColor(ShadowColor.shadowColor(-16429703)))
+      .append(Component.text("This is a")
+        .shadowColor(ShadowColor.shadowColor(0xff_05_4d_79)))
       .append(Component.text(" test")).asComponent();
 
     this.assertSerializedEquals(expected, builder);
