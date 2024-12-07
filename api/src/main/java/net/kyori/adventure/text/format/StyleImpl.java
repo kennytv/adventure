@@ -223,6 +223,10 @@ final class StyleImpl implements Style {
       builder.color(null);
     }
 
+    if (Objects.equals(this.shadowColor(), that.shadowColor())) {
+      builder.shadowColor(null);
+    }
+
     for (int i = 0, length = DecorationMap.DECORATIONS.length; i < length; i++) {
       final TextDecoration decoration = DecorationMap.DECORATIONS[i];
       if (this.decoration(decoration) == that.decoration(decoration)) {
@@ -269,6 +273,7 @@ final class StyleImpl implements Style {
       this.decorations.examinableProperties(),
       Stream.of(
         ExaminableProperty.of("color", this.color),
+        ExaminableProperty.of("shadowColor", this.shadowColor),
         ExaminableProperty.of("clickEvent", this.clickEvent),
         ExaminableProperty.of("hoverEvent", this.hoverEvent),
         ExaminableProperty.of("insertion", this.insertion),
@@ -289,6 +294,7 @@ final class StyleImpl implements Style {
     final StyleImpl that = (StyleImpl) other;
     return Objects.equals(this.color, that.color)
       && this.decorations.equals(that.decorations)
+      && Objects.equals(this.shadowColor, that.shadowColor)
       && Objects.equals(this.clickEvent, that.clickEvent)
       && Objects.equals(this.hoverEvent, that.hoverEvent)
       && Objects.equals(this.insertion, that.insertion)
@@ -298,6 +304,7 @@ final class StyleImpl implements Style {
   @Override
   public int hashCode() {
     int result = Objects.hashCode(this.color);
+    result = (31 * result) + Objects.hashCode(this.shadowColor);
     result = (31 * result) + this.decorations.hashCode();
     result = (31 * result) + Objects.hashCode(this.clickEvent);
     result = (31 * result) + Objects.hashCode(this.hoverEvent);
@@ -321,6 +328,7 @@ final class StyleImpl implements Style {
 
     BuilderImpl(final @NotNull StyleImpl style) {
       this.color = style.color;
+      this.shadowColor = style.shadowColor;
       this.decorations = new EnumMap<>(style.decorations);
       this.clickEvent = style.clickEvent;
       this.hoverEvent = style.hoverEvent;
@@ -418,6 +426,13 @@ final class StyleImpl implements Style {
             this.color(color);
           }
         }
+
+        final ShadowColor shadowColor = that.shadowColor();
+        if (shadowColor != null) {
+          if (strategy == Merge.Strategy.ALWAYS || (strategy == Merge.Strategy.IF_ABSENT_ON_TARGET && this.shadowColor == null)) {
+            this.shadowColor(shadowColor);
+          }
+        }
       }
 
       if (merges.contains(Merge.DECORATIONS)) {
@@ -481,6 +496,7 @@ final class StyleImpl implements Style {
 
     private boolean isEmpty() {
       return this.color == null
+        && this.shadowColor == null
         && this.decorations.values().stream().allMatch(state -> state == TextDecoration.State.NOT_SET)
         && this.clickEvent == null
         && this.hoverEvent == null

@@ -90,7 +90,7 @@ final class SerializerFactory implements TypeAdapterFactory {
     } else if (COLOR_TYPE.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) (this.features.value(JSONOptions.EMIT_RGB) ? TextColorSerializer.INSTANCE : TextColorSerializer.DOWNSAMPLE_COLOR);
     } else if (SHADOW_COLOR_TYPE.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) ShadowColorSerializer.INSTANCE;
+      return (TypeAdapter<T>) ShadowColorSerializer.create(this.features);
     } else if (TEXT_DECORATION_TYPE.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) TextDecorationSerializer.INSTANCE;
     } else if (BLOCK_NBT_POS_TYPE.isAssignableFrom(rawType)) {

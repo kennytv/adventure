@@ -91,6 +91,7 @@ final class StyleSerializer extends TypeAdapter<Style> {
       hoverMode == JSONOptions.HoverEventValueMode.LEGACY_ONLY || hoverMode == JSONOptions.HoverEventValueMode.BOTH,
       hoverMode == JSONOptions.HoverEventValueMode.MODERN_ONLY || hoverMode == JSONOptions.HoverEventValueMode.BOTH,
       features.value(JSONOptions.VALIDATE_STRICT_EVENTS),
+      features.value(JSONOptions.SHADOW_COLOR_MODE) != JSONOptions.ShadowColorEmitMode.NONE,
       gson
     ).nullSafe();
   }
@@ -99,6 +100,7 @@ final class StyleSerializer extends TypeAdapter<Style> {
   private final boolean emitLegacyHover;
   private final boolean emitModernHover;
   private final boolean strictEventValues;
+  private final boolean emitShadowColor;
   private final Gson gson;
 
   private StyleSerializer(
@@ -106,12 +108,14 @@ final class StyleSerializer extends TypeAdapter<Style> {
     final boolean emitLegacyHover,
     final boolean emitModernHover,
     final boolean strictEventValues,
+    final boolean emitShadowColor,
     final Gson gson
   ) {
     this.legacyHover = legacyHover;
     this.emitLegacyHover = emitLegacyHover;
     this.emitModernHover = emitModernHover;
     this.strictEventValues = strictEventValues;
+    this.emitShadowColor = emitShadowColor;
     this.gson = gson;
   }
 
@@ -131,6 +135,8 @@ final class StyleSerializer extends TypeAdapter<Style> {
         } else if (color.decoration != null) {
           style.decoration(color.decoration, TextDecoration.State.TRUE);
         }
+      } else if (fieldName.equals(SHADOW_COLOR)) {
+        style.shadowColor(this.gson.fromJson(in, SerializerFactory.SHADOW_COLOR_TYPE));
       } else if (TextDecoration.NAMES.keys().contains(fieldName)) {
         style.decoration(TextDecoration.NAMES.value(fieldName), GsonHacks.readBoolean(in));
       } else if (fieldName.equals(INSERTION)) {
@@ -269,7 +275,7 @@ final class StyleSerializer extends TypeAdapter<Style> {
     }
 
     final @Nullable ShadowColor shadowColor = value.shadowColor();
-    if (shadowColor != null) {
+    if (shadowColor != null && this.emitShadowColor) {
       out.name(SHADOW_COLOR);
       this.gson.toJson(shadowColor, SerializerFactory.SHADOW_COLOR_TYPE, out);
     }

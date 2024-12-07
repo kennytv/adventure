@@ -562,7 +562,7 @@ public interface Style extends Buildable<Style, Style.Builder>, Examinable, Styl
    */
   enum Merge {
     /**
-     * Merges {@link Style#color()}.
+     * Merges {@link Style#color()} and {@link Style#shadowColor()}.
      *
      * @since 4.0.0
      */

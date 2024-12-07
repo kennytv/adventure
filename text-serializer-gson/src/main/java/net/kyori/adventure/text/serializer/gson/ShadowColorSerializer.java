@@ -23,27 +23,71 @@
  */
 package net.kyori.adventure.text.serializer.gson;
 
+import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import net.kyori.adventure.text.format.ShadowColor;
+import net.kyori.adventure.text.serializer.json.JSONOptions;
+import net.kyori.option.OptionState;
 
 final class ShadowColorSerializer extends TypeAdapter<ShadowColor> {
-  static final TypeAdapter<ShadowColor> INSTANCE = new ShadowColorSerializer().nullSafe();
+  static TypeAdapter<ShadowColor> create(final OptionState options) {
+    return new ShadowColorSerializer(options.value(JSONOptions.SHADOW_COLOR_MODE) == JSONOptions.ShadowColorEmitMode.EMIT_ARRAY).nullSafe();
+  }
+
+  private final boolean emitArray;
+
+  private ShadowColorSerializer(final boolean emitArray) {
+    this.emitArray = emitArray;
+  }
 
   @Override
   public void write(final JsonWriter out, final ShadowColor value) throws IOException {
-    out.value(value.value());
+    if (this.emitArray) {
+      out.beginArray()
+        .value(componentAsFloat(value.red()))
+        .value(componentAsFloat(value.green()))
+        .value(componentAsFloat(value.blue()))
+        .value(componentAsFloat(value.alpha()))
+        .endArray();
+
+    } else {
+      out.value(value.value());
+    }
   }
 
   @Override
   public ShadowColor read(final JsonReader in) throws IOException {
     if (in.peek() == JsonToken.BEGIN_ARRAY) {
-      throw new UnsupportedOperationException(); // TODO
+      in.beginArray();
+      final double r = in.nextDouble();
+      final double g = in.nextDouble();
+      final double b = in.nextDouble();
+      final double a = in.nextDouble();
+      if (in.peek() != JsonToken.END_ARRAY) {
+        throw new JsonParseException("Failed to parse shadow colour at " + in.getPath() + ": expected end of 4-element array but got " + in.peek() + " instead.");
+      }
+      in.endArray();
+
+      return ShadowColor.shadowColor(
+        componentFromFloat(r),
+        componentFromFloat(g),
+        componentFromFloat(b),
+        componentFromFloat(a)
+      );
     }
 
     return ShadowColor.shadowColor(in.nextInt());
+  }
+
+  static float componentAsFloat(final int element) {
+    return (float) element / 0xff;
+  }
+
+  static int componentFromFloat(final double element) {
+    return (int) ((float) element) * 0xff;
   }
 }
