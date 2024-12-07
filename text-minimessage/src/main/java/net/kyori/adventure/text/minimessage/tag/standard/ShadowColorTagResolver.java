@@ -23,8 +23,10 @@
  */
 package net.kyori.adventure.text.minimessage.tag.standard;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.Context;
 import net.kyori.adventure.text.minimessage.ParsingException;
 import net.kyori.adventure.text.minimessage.internal.serializer.SerializableResolver;
@@ -37,10 +39,18 @@ import org.jetbrains.annotations.Nullable;
 
 class ShadowColorTagResolver implements TagResolver, SerializableResolver.Single {
   private static final String SHADOW_COLOR = "shadow";
+  private static final float DEFAULT_ALPHA = 0.25f;
 
   static final TagResolver INSTANCE = new ShadowColorTagResolver();
   private static final StyleClaim<ShadowColor> STYLE = StyleClaim.claim(SHADOW_COLOR, Style::shadowColor, (color, emitter) -> {
-    emitter.tag(SHADOW_COLOR).argument(color.asHexString());
+    emitter.tag(SHADOW_COLOR);
+
+    final @Nullable NamedTextColor possibleMatch = NamedTextColor.namedColor(TextColor.color(color).value());
+    if (possibleMatch != null) {
+      emitter.argument(NamedTextColor.NAMES.key(possibleMatch)).argument(Float.toString((float) color.alpha() / 0xff));
+    } else {
+      emitter.argument(color.asHexString());
+    }
   });
 
   ShadowColorTagResolver() {
@@ -53,10 +63,18 @@ class ShadowColorTagResolver implements TagResolver, SerializableResolver.Single
     }
 
     final String colorString = args.popOr("Expected to find a color parameter: #RRGGBBAA").lowerValue();
-    final ShadowColor color = ShadowColor.fromHexString(colorString);
-    if (color == null) {
-      throw ctx.newException(String.format("Unable to parse a shadow color from '%s'. Please use #RRGGBBAA formatting.", colorString));
+    final ShadowColor color;
+    if (colorString.startsWith(TextColor.HEX_PREFIX) && colorString.length() == 9) {
+      color = ShadowColor.fromHexString(colorString);
+      if (color == null) {
+        throw ctx.newException(String.format("Unable to parse a shadow color from '%s'. Please use #RRGGBBAA formatting.", colorString));
+      }
+    } else {
+      final TextColor text = ColorTagResolver.resolveColor(colorString, ctx);
+      final float alpha = args.hasNext() ? (float) args.pop().asDouble().orElseThrow(() -> ctx.newException("Number was expected to be a double")) : DEFAULT_ALPHA;
+      color = ShadowColor.shadowColor(text, (int) (alpha * 0xff));
     }
+
     return Tag.styling(color);
   }
 
