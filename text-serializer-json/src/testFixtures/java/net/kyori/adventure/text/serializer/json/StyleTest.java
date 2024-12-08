@@ -35,7 +35,6 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -95,7 +94,7 @@ class StyleTest extends SerializerTest {
       object.addProperty(JSONComponentConstants.TEXT, "");
       object.addProperty(name(TextDecoration.BOLD), 1);
     })).style();
-    assertFalse(s0.hasDecoration(TextDecoration.BOLD));
+    assertTrue(s0.hasDecoration(TextDecoration.BOLD));
 
     assertThrows(RuntimeException.class, () -> {
       deserialize(object(object -> {
