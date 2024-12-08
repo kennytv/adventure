@@ -29,6 +29,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -46,6 +47,7 @@ final class StyleSerializer implements TypeSerializer<Style> {
 
   static final String FONT = "font";
   static final String COLOR = "color";
+  static final String SHADOW_COLOR = "shadow_color";
   static final String INSERTION = "insertion";
   static final String CLICK_EVENT = "clickEvent";
   static final String CLICK_EVENT_ACTION = "action";
@@ -74,6 +76,10 @@ final class StyleSerializer implements TypeSerializer<Style> {
     final @Nullable TextColor color = value.node(COLOR).get(TextColor.class);
     if (color != null) {
       builder.color(color);
+    }
+    final @Nullable ShadowColor shadowColor = value.node(SHADOW_COLOR).get(ShadowColor.class);
+    if (shadowColor != null) {
+      builder.shadowColor(shadowColor);
     }
 
     for (final TextDecoration decoration : DECORATIONS) {
@@ -132,6 +138,7 @@ final class StyleSerializer implements TypeSerializer<Style> {
     }
     value.node(FONT).set(Key.class, obj.font());
     value.node(COLOR).set(TextColor.class, obj.color());
+    value.node(SHADOW_COLOR).set(ShadowColor.class, obj.shadowColor());
     for (final TextDecoration decoration : DECORATIONS) {
       final ConfigurationNode decorationNode = value.node(nonNull(TextDecoration.NAMES.key(decoration), "decoration"));
       final TextDecoration.State state = obj.decoration(decoration);

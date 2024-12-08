@@ -26,6 +26,7 @@ package net.kyori.adventure.serializer.configurate4;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,16 @@ class StyleSerializerTest implements ConfigurateTestBase {
     final Style style = Style.style()
       .color(NamedTextColor.DARK_RED)
       .build();
+
+    this.assertRoundtrippable(Style.class, style, node);
+  }
+
+  @Test
+  void testSerializeShadowColor() {
+    final ConfigurationNode node = this.node(n -> {
+      n.node(StyleSerializer.SHADOW_COLOR).raw(0xCCFF0022);
+    });
+    final Style style = Style.style(ShadowColor.shadowColor(0xFF, 0x00, 0x22, 0xCC));
 
     this.assertRoundtrippable(Style.class, style, node);
   }
