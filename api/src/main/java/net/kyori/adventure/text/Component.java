@@ -2226,27 +2226,27 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   /**
    * Sets the shadow color of this component.
    *
-   * @param color the color
+   * @param argb the color
    * @return a component
    * @since 4.18.0
    */
   @Contract(pure = true)
   @Override
-  default @NotNull Component shadowColor(final @Nullable ARGBLike color) {
-    return this.style(this.style().shadowColor(color));
+  default @NotNull Component shadowColor(final @Nullable ARGBLike argb) {
+    return this.style(this.style().shadowColor(argb));
   }
 
   /**
    * Sets the shadow color if there isn't one set already.
    *
-   * @param color the color
+   * @param argb the color
    * @return a component
    * @since 4.18.0
    */
   @Contract(pure = true)
   @Override
-  default @NotNull Component shadowColorIfAbsent(final @Nullable ARGBLike color) {
-    if (this.shadowColor() == null) return this.shadowColor(color);
+  default @NotNull Component shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    if (this.shadowColor() == null) return this.shadowColor(argb);
     return this;
   }
 

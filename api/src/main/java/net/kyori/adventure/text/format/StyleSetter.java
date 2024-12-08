@@ -77,20 +77,20 @@ public interface StyleSetter<T extends StyleSetter<?>> {
   /**
    * Sets the shadow color.
    *
-   * @param color the color
+   * @param argb the color
    * @return an object ({@code T})
    * @since 4.18.0
    */
-  @NotNull T shadowColor(final @Nullable ARGBLike color);
+  @NotNull T shadowColor(final @Nullable ARGBLike argb);
 
   /**
    * Sets the shadow color if there isn't one set already.
    *
-   * @param color the color
+   * @param argb the color
    * @return an object ({@code T})
    * @since 4.18.0
    */
-  @NotNull T shadowColorIfAbsent(final @Nullable ARGBLike color);
+  @NotNull T shadowColorIfAbsent(final @Nullable ARGBLike argb);
 
   /**
    * Sets the state of {@code decoration} to {@link TextDecoration.State#TRUE}.

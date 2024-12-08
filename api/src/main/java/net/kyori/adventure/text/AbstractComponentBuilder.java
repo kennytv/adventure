@@ -239,15 +239,15 @@ abstract class AbstractComponentBuilder<C extends BuildableComponent<C, B>, B ex
 
   @Override
   @SuppressWarnings("unchecked")
-  public @NotNull B shadowColor(final @Nullable ARGBLike color) {
-    this.styleBuilder().shadowColor(color);
+  public @NotNull B shadowColor(final @Nullable ARGBLike argb) {
+    this.styleBuilder().shadowColor(argb);
     return (B) this;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public @NotNull B shadowColorIfAbsent(final @Nullable ARGBLike color) {
-    this.styleBuilder().shadowColorIfAbsent(color);
+  public @NotNull B shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    this.styleBuilder().shadowColorIfAbsent(argb);
     return (B) this;
   }
 

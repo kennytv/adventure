@@ -23,7 +23,6 @@
  */
 package net.kyori.adventure.text.format;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 import net.kyori.adventure.internal.Internals;
 import net.kyori.examination.Examinable;
@@ -35,7 +34,7 @@ final class ShadowColorImpl implements ShadowColor, Examinable {
   static final int NONE_VALUE = 0;
   static final ShadowColorImpl NONE = new ShadowColorImpl(NONE_VALUE);
 
-  private final int value;
+  private final int value; // ARGB
 
   ShadowColorImpl(final int value) {
     this.value = value;
@@ -55,7 +54,7 @@ final class ShadowColorImpl implements ShadowColor, Examinable {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.value);
+    return Integer.hashCode(this.value);
   }
 
   @Override
@@ -66,7 +65,7 @@ final class ShadowColorImpl implements ShadowColor, Examinable {
   @Override
   public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
     return Stream.of(
-      ExaminableProperty.of("value", this.value)
+      ExaminableProperty.of("value", this.value) // todo: represent as hex?
     );
   }
 }

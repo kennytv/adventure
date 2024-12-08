@@ -105,15 +105,15 @@ final class StyleImpl implements Style {
   }
 
   @Override
-  public @NotNull Style shadowColor(final @Nullable ARGBLike color) {
-    if (Objects.equals(this.shadowColor, color)) return this;
-    return new StyleImpl(this.font, this.color, color == null ? null : ShadowColor.shadowColor(color), this.decorations, this.clickEvent, this.hoverEvent, this.insertion);
+  public @NotNull Style shadowColor(final @Nullable ARGBLike argb) {
+    if (Objects.equals(this.shadowColor, argb)) return this;
+    return new StyleImpl(this.font, this.color, argb == null ? null : ShadowColor.shadowColor(argb), this.decorations, this.clickEvent, this.hoverEvent, this.insertion);
   }
 
   @Override
-  public @NotNull Style shadowColorIfAbsent(final @Nullable ARGBLike color) {
+  public @NotNull Style shadowColorIfAbsent(final @Nullable ARGBLike argb) {
     if (this.shadowColor == null) {
-      return this.shadowColor(color);
+      return this.shadowColor(argb);
     }
     return this;
   }
@@ -357,15 +357,15 @@ final class StyleImpl implements Style {
     }
 
     @Override
-    public @NotNull Builder shadowColor(final @Nullable ARGBLike color) {
-      this.shadowColor = color == null ? null : ShadowColor.shadowColor(color);
+    public @NotNull Builder shadowColor(final @Nullable ARGBLike argb) {
+      this.shadowColor = argb == null ? null : ShadowColor.shadowColor(argb);
       return this;
     }
 
     @Override
-    public @NotNull Builder shadowColorIfAbsent(final @Nullable ARGBLike color) {
+    public @NotNull Builder shadowColorIfAbsent(final @Nullable ARGBLike argb) {
       if (this.shadowColor == null) {
-        this.shadowColor = color == null ? null : ShadowColor.shadowColor(color);
+        this.shadowColor = argb == null ? null : ShadowColor.shadowColor(argb);
       }
       return this;
     }
@@ -426,7 +426,9 @@ final class StyleImpl implements Style {
             this.color(color);
           }
         }
+      }
 
+      if (merges.contains(Merge.SHADOW_COLOR)) {
         final ShadowColor shadowColor = that.shadowColor();
         if (shadowColor != null) {
           if (strategy == Merge.Strategy.ALWAYS || (strategy == Merge.Strategy.IF_ABSENT_ON_TARGET && this.shadowColor == null)) {

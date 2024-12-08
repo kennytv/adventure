@@ -110,14 +110,14 @@ public interface ScopedComponent<C extends Component> extends Component {
 
   @Override
   @SuppressWarnings("unchecked")
-  default @NotNull C shadowColor(final @Nullable ARGBLike color) {
-    return (C) Component.super.shadowColor(color);
+  default @NotNull C shadowColor(final @Nullable ARGBLike argb) {
+    return (C) Component.super.shadowColor(argb);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  default @NotNull C shadowColorIfAbsent(final @Nullable ARGBLike color) {
-    return (C) Component.super.shadowColorIfAbsent(color);
+  default @NotNull C shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    return (C) Component.super.shadowColorIfAbsent(argb);
   }
 
   @Override

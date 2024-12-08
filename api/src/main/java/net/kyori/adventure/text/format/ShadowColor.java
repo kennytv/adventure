@@ -84,15 +84,15 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
    *
    * <p>This int will be in the format {@code 0xAARRGGBB}</p>
    *
-   * @param value the int-packed ARGB value
+   * @param argb the int-packed ARGB value
    * @return a shadow color
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @NotNull ShadowColor shadowColor(final int value) {
-    if (value == ShadowColorImpl.NONE_VALUE) return none();
+  static @NotNull ShadowColor shadowColor(final int argb) {
+    if (argb == ShadowColorImpl.NONE_VALUE) return none();
 
-    return new ShadowColorImpl(value);
+    return new ShadowColorImpl(argb);
   }
 
   /**
@@ -125,14 +125,14 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
   /**
    * Create a shadow color from an existing colour plus an alpha value.
    *
-   * @param color the existing color
+   * @param rgb the existing color
    * @param alpha the alpha
    * @return a shadow colour
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @NotNull ShadowColor shadowColor(final @NotNull RGBLike color, final @Range(from = 0x0, to = 0xff) int alpha) {
-    return shadowColor(color.red(), color.green(), color.blue(), alpha);
+  static @NotNull ShadowColor shadowColor(final @NotNull RGBLike rgb, final @Range(from = 0x0, to = 0xff) int alpha) {
+    return shadowColor(rgb.red(), rgb.green(), rgb.blue(), alpha);
   }
 
   /**
@@ -155,20 +155,20 @@ public interface ShadowColor extends StyleBuilderApplicable, ARGBLike {
    *
    * <p>This string must be in the format {@code #RRGGBBAA}</p>
    *
-   * @param value the input value
+   * @param hex the input value
    * @return a shadow color if possible, or null if any components are invalid
    * @since 4.18.0
    */
   @Contract(pure = true)
-  static @Nullable ShadowColor fromHexString(@Pattern("#[0-9a-fA-F]{8}") final @NotNull String value) {
-    if (value.length() != 9) return null;
-    if (!value.startsWith("#")) return null;
+  static @Nullable ShadowColor fromHexString(@Pattern("#[0-9a-fA-F]{8}") final @NotNull String hex) {
+    if (hex.length() != 9) return null;
+    if (!hex.startsWith("#")) return null;
 
     try {
-      final int r = Integer.parseInt(value.substring(1, 3), 16);
-      final int g = Integer.parseInt(value.substring(3, 5), 16);
-      final int b = Integer.parseInt(value.substring(5, 7), 16);
-      final int a = Integer.parseInt(value.substring(7, 9), 16);
+      final int r = Integer.parseInt(hex.substring(1, 3), 16);
+      final int g = Integer.parseInt(hex.substring(3, 5), 16);
+      final int b = Integer.parseInt(hex.substring(5, 7), 16);
+      final int a = Integer.parseInt(hex.substring(7, 9), 16);
       return new ShadowColorImpl((a << 24) | (r << 16) | (g << 8) | b);
     } catch (NumberFormatException ignored) {
       return null;
