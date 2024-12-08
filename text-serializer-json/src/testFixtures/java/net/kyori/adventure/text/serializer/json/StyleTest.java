@@ -30,6 +30,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -103,6 +104,25 @@ class StyleTest extends SerializerTest {
         object.add(name(TextDecoration.BOLD), JsonNull.INSTANCE);
       }));
     });
+  }
+
+  @Test
+  void testShadowColorInt() {
+    this.testStyle(Style.style(ShadowColor.shadowColor(0xCCFF0022)), json -> json.addProperty(JSONComponentConstants.SHADOW_COLOR, 0xCCFF0022));
+  }
+
+  @Test
+  void testShadowColorFloats() {
+    final JSONComponentSerializer floatSerial = JSONComponentSerializer.builder()
+      .editOptions(opts -> opts.value(JSONOptions.SHADOW_COLOR_MODE, JSONOptions.ShadowColorEmitMode.EMIT_ARRAY))
+      .build();
+
+    this.testStyle(floatSerial, Style.style(ShadowColor.shadowColor(0x80, 0x40, 0xcc, 0xff)), json -> json.add(JSONComponentConstants.SHADOW_COLOR, array(arr -> {
+      arr.add(0.501960813999176);
+      arr.add(0.250980406999588f);
+      arr.add(0.800000011920929f);
+      arr.add(1f);
+    })));
   }
 
   @Test

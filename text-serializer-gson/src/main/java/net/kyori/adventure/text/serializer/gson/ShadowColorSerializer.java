@@ -88,6 +88,6 @@ final class ShadowColorSerializer extends TypeAdapter<ShadowColor> {
   }
 
   static int componentFromFloat(final double element) {
-    return (int) ((float) element) * 0xff;
+    return (int) (((float) element) * 0xff);
   }
 }
