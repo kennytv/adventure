@@ -65,7 +65,7 @@ public final class StandardTags {
         ScoreTag.RESOLVER,
         NbtTag.RESOLVER,
         PrideTag.RESOLVER,
-        ShadowColorTagResolver.INSTANCE
+        ShadowColorTag.RESOLVER
       )
       .build();
 
@@ -277,15 +277,15 @@ public final class StandardTags {
   }
 
   /**
-   * Get a resolver for the {@value ShadowColorTagResolver#SHADOW_COLOR} tags.
+   * Get a resolver for the {@value ShadowColorTag#SHADOW_COLOR} tags.
    *
    * <p>This tag support both hex string</p>
    *
-   * @return a resolver for the {@value ShadowColorTagResolver#SHADOW_COLOR} tags
+   * @return a resolver for the {@value ShadowColorTag#SHADOW_COLOR} tags
    * @since 4.10.0
    */
   public static @NotNull TagResolver shadowColor() {
-    return ShadowColorTagResolver.INSTANCE;
+    return ShadowColorTag.RESOLVER;
   }
 
   /**

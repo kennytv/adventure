@@ -31,37 +31,28 @@ import net.kyori.adventure.text.minimessage.Context;
 import net.kyori.adventure.text.minimessage.ParsingException;
 import net.kyori.adventure.text.minimessage.internal.serializer.SerializableResolver;
 import net.kyori.adventure.text.minimessage.internal.serializer.StyleClaim;
+import net.kyori.adventure.text.minimessage.internal.serializer.TokenEmitter;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class ShadowColorTagResolver implements TagResolver, SerializableResolver.Single {
+final class ShadowColorTag {
   private static final String SHADOW_COLOR = "shadow";
+  private static final String SHADOW_NONE = "!" + SHADOW_COLOR;
   private static final float DEFAULT_ALPHA = 0.25f;
 
-  static final TagResolver INSTANCE = new ShadowColorTagResolver();
-  private static final StyleClaim<ShadowColor> STYLE = StyleClaim.claim(SHADOW_COLOR, Style::shadowColor, (color, emitter) -> {
-    emitter.tag(SHADOW_COLOR);
+  static final TagResolver RESOLVER = TagResolver.resolver(
+    SerializableResolver.claimingStyle(
+      SHADOW_COLOR,
+      ShadowColorTag::create,
+      StyleClaim.claim(SHADOW_COLOR, Style::shadowColor, ShadowColorTag::emit)
+    ),
+    TagResolver.resolver(SHADOW_NONE, Tag.styling(ShadowColor.none()))
+  );
 
-    final @Nullable NamedTextColor possibleMatch = NamedTextColor.namedColor(TextColor.color(color).value());
-    if (possibleMatch != null) {
-      emitter.argument(NamedTextColor.NAMES.key(possibleMatch)).argument(Float.toString((float) color.alpha() / 0xff));
-    } else {
-      emitter.argument(color.asHexString());
-    }
-  });
-
-  ShadowColorTagResolver() {
-  }
-
-  @Override
-  public @Nullable Tag resolve(final @NotNull String name, final @NotNull ArgumentQueue args, final @NotNull Context ctx) throws ParsingException {
-    if (!this.has(name)) {
-      return null;
-    }
-
+  static Tag create(final @NotNull ArgumentQueue args, final @NotNull Context ctx) throws ParsingException {
     final String colorString = args.popOr("Expected to find a color parameter: #RRGGBBAA").lowerValue();
     final ShadowColor color;
     if (colorString.startsWith(TextColor.HEX_PREFIX) && colorString.length() == 9) {
@@ -78,13 +69,22 @@ class ShadowColorTagResolver implements TagResolver, SerializableResolver.Single
     return Tag.styling(color);
   }
 
-  @Override
-  public boolean has(final @NotNull String name) {
-    return name.equals(SHADOW_COLOR);
+  static void emit(final @NotNull ShadowColor color, final @NotNull TokenEmitter emitter) {
+    if (ShadowColor.none().equals(color)) {
+      emitter.tag(SHADOW_NONE);
+      return;
+    }
+
+    emitter.tag(SHADOW_COLOR);
+
+    final @Nullable NamedTextColor possibleMatch = NamedTextColor.namedColor(TextColor.color(color).value());
+    if (possibleMatch != null) {
+      emitter.argument(NamedTextColor.NAMES.key(possibleMatch)).argument(Float.toString((float) color.alpha() / 0xff));
+    } else {
+      emitter.argument(color.asHexString());
+    }
   }
 
-  @Override
-  public @Nullable StyleClaim<?> claimStyle() {
-    return STYLE;
+  private ShadowColorTag() {
   }
 }
