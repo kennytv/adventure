@@ -111,7 +111,7 @@ final class RainbowTag extends AbstractColorChangingTag {
   @Override
   protected @NotNull Consumer<TokenEmitter> preserveData() {
     final boolean reversed = this.reversed;
-    final int phase = this.phase;
+    final int phase = (int) Math.round(this.dividedPhase * 10);
     return emit -> {
       emit.tag(RAINBOW);
       if (reversed && phase != 0) {

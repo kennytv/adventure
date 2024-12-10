@@ -370,17 +370,19 @@ class RainbowTagTest extends AbstractTest {
   @Test
   void gh1040() {
     final String input = "<rainbow:16777215>||||||||||";
-    final Component expected = textOfChildren(
-      text("|", color(0x00ffff)),
-      text("|", color(0x0065ff)),
-      text("|", color(0x3200ff)),
-      text("|", color(0xcc00ff)),
-      text("|", color(0xff0099)),
-      text("|", color(0xff0000)),
-      text("|", color(0xff9900)),
-      text("|", color(0xccff00)),
-      text("|", color(0x32ff00)),
-      text("|", color(0x00ff65))
+    final Component expected = virtualOfChildren(
+      textOfChildren(
+        text("|", color(0x00ffff)),
+        text("|", color(0x0065ff)),
+        text("|", color(0x3200ff)),
+        text("|", color(0xcc00ff)),
+        text("|", color(0xff0099)),
+        text("|", color(0xff0000)),
+        text("|", color(0xff9900)),
+        text("|", color(0xccff00)),
+        text("|", color(0x32ff00)),
+        text("|", color(0x00ff65))
+      )
     );
 
     this.assertParsedEquals(expected, input);
