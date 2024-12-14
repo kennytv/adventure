@@ -34,7 +34,6 @@ import net.kyori.adventure.text.StorageNBTComponent;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.VirtualComponent;
-import net.kyori.adventure.text.VirtualComponentRenderer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -142,12 +141,8 @@ public abstract class AbstractComponentRenderer<C> implements ComponentRenderer<
    * @return the rendered component
    * @since 4.18.0
    */
-  @SuppressWarnings("unchecked")
   protected @NotNull Component renderVirtual(final @NotNull VirtualComponent component, final @NotNull C context) {
-    if (component.contextType().isInstance(context)) {
-      return ((VirtualComponentRenderer<C>) component.renderer()).apply(context).asComponent();
-    }
-    return component; // will be processed as a TextComponent instead
+    return component;
   }
 
   /**
