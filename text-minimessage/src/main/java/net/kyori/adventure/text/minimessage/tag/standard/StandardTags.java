@@ -282,7 +282,7 @@ public final class StandardTags {
    * <p>This tag support both hex string</p>
    *
    * @return a resolver for the {@value ShadowColorTag#SHADOW_COLOR} tags
-   * @since 4.10.0
+   * @since 4.18.0
    */
   public static @NotNull TagResolver shadowColor() {
     return ShadowColorTag.RESOLVER;
