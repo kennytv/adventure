@@ -77,6 +77,9 @@ public interface StyleSetter<T extends StyleSetter<?>> {
   /**
    * Sets the shadow color.
    *
+   * <p>Setting the color to {@code null} will reset the shadow color to default.
+   * To remove the shadow entirely, use {@link ShadowColor#none()}.</p>
+   *
    * @param argb the color
    * @return an object ({@code T})
    * @since 4.18.0
@@ -85,6 +88,9 @@ public interface StyleSetter<T extends StyleSetter<?>> {
 
   /**
    * Sets the shadow color if there isn't one set already.
+   *
+   * <p>Setting the color to {@code null} will reset the shadow color to default.
+   * To remove the shadow entirely, use {@link ShadowColor#none()}.</p>
    *
    * @param argb the color
    * @return an object ({@code T})
