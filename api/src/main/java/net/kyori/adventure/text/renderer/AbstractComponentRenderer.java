@@ -140,7 +140,7 @@ public abstract class AbstractComponentRenderer<C> implements ComponentRenderer<
    * @param component the component
    * @param context the context
    * @return the rendered component
-   * @since 4.14.0
+   * @since 4.18.0
    */
   @SuppressWarnings("unchecked")
   protected @NotNull Component renderVirtual(final @NotNull VirtualComponent component, final @NotNull C context) {

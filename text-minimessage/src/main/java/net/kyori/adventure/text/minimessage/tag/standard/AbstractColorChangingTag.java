@@ -179,7 +179,7 @@ abstract class AbstractColorChangingTag implements Modifying, Examinable {
    * Return an emitable that will accurately reserialize the provided input data.
    *
    * @return the emitable for this tag
-   * @since 4.13.0
+   * @since 4.18.0
    */
   protected abstract @NotNull Consumer<TokenEmitter> preserveData();
 
