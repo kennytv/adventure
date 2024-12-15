@@ -59,6 +59,14 @@ public interface StyleGetter {
   @Nullable TextColor color();
 
   /**
+   * Gets the shadow color.
+   *
+   * @return the shadow color
+   * @since 4.18.0
+   */
+  @Nullable ShadowColor shadowColor();
+
+  /**
    * Tests if this stylable has a decoration.
    *
    * @param decoration the decoration

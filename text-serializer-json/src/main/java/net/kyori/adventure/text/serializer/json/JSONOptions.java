@@ -42,6 +42,7 @@ public final class JSONOptions {
   private static final int VERSION_1_16 = 2526; // 20w16a
   private static final int VERSION_1_20_3 = 3679; // 23w40a
   private static final int VERSION_1_20_5 = 3819; // 24w09a
+  private static final int VERSION_1_21_4 = 4174; // 24w44a
 
   /**
    * Whether to emit RGB text.
@@ -100,6 +101,13 @@ public final class JSONOptions {
   public static final Option<ShowItemHoverDataMode> SHOW_ITEM_HOVER_DATA_MODE = Option.enumOption(key("emit/show_item_hover_data"), ShowItemHoverDataMode.class, ShowItemHoverDataMode.EMIT_EITHER);
 
   /**
+   * How to emit shadow colour data.
+   *
+   * @since 4.18.0
+   */
+  public static final Option<ShadowColorEmitMode> SHADOW_COLOR_MODE = Option.enumOption(key("emit/shadow_color"), ShadowColorEmitMode.class, ShadowColorEmitMode.EMIT_INTEGER);
+
+  /**
    * Versioned by world data version.
    */
   private static final OptionState.Versioned BY_DATA_VERSION = OptionState.versionedOptionState()
@@ -111,6 +119,7 @@ public final class JSONOptions {
         .value(VALIDATE_STRICT_EVENTS, false)
         .value(EMIT_DEFAULT_ITEM_HOVER_QUANTITY, false)
         .value(SHOW_ITEM_HOVER_DATA_MODE, ShowItemHoverDataMode.EMIT_LEGACY_NBT)
+        .value(SHADOW_COLOR_MODE, ShadowColorEmitMode.NONE)
     )
     .version(
       VERSION_1_16,
@@ -128,6 +137,10 @@ public final class JSONOptions {
       b -> b.value(EMIT_DEFAULT_ITEM_HOVER_QUANTITY, true)
         .value(SHOW_ITEM_HOVER_DATA_MODE, ShowItemHoverDataMode.EMIT_DATA_COMPONENTS)
     )
+    .version(
+      VERSION_1_21_4,
+      b -> b.value(SHADOW_COLOR_MODE, ShadowColorEmitMode.EMIT_INTEGER)
+    )
     .build();
 
   /**
@@ -141,6 +154,7 @@ public final class JSONOptions {
     .value(EMIT_COMPACT_TEXT_COMPONENT, false)
     .value(VALIDATE_STRICT_EVENTS, false)
     .value(SHOW_ITEM_HOVER_DATA_MODE, ShowItemHoverDataMode.EMIT_EITHER)
+    .value(SHADOW_COLOR_MODE, ShadowColorEmitMode.EMIT_INTEGER)
     .build();
 
   private static String key(final String value) {
@@ -219,5 +233,31 @@ public final class JSONOptions {
      * @since 4.17.0
      */
     EMIT_EITHER,
+  }
+
+  /**
+   * How text shadow colors should be emitted.
+   *
+   * @since 4.18.0
+   * @sinceMinecraft 1.21.4
+   */
+  public enum ShadowColorEmitMode {
+    /**
+     * Do not emit shadow colours.
+     */
+    NONE,
+    /**
+     * Emit as a single packed integer value containing, in order, ARGB bytes.
+     *
+     * @since 4.18.0
+     */
+    EMIT_INTEGER,
+    /**
+     * Emit a colour as 4-element float array of the RGBA components of the colour.
+     *
+     * @since 4.18.0
+     */
+    EMIT_ARRAY
+
   }
 }

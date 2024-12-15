@@ -568,6 +568,12 @@ public interface Style extends Buildable<Style, Style.Builder>, Examinable, Styl
      */
     COLOR,
     /**
+     * Merges {@link Style#shadowColor()}.
+     *
+     * @since 4.18.0
+     */
+    SHADOW_COLOR,
+    /**
      * Merges {@link Style#decorations()}.
      *
      * @since 4.0.0

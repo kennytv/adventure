@@ -40,6 +40,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -58,6 +59,7 @@ import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HO
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HOVER_EVENT_CONTENTS;
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.HOVER_EVENT_VALUE;
 import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.INSERTION;
+import static net.kyori.adventure.text.serializer.json.JSONComponentConstants.SHADOW_COLOR;
 
 final class StyleSerializer extends TypeAdapter<Style> {
   @SuppressWarnings("checkstyle:NoWhitespaceAfter")
@@ -89,6 +91,7 @@ final class StyleSerializer extends TypeAdapter<Style> {
       hoverMode == JSONOptions.HoverEventValueMode.LEGACY_ONLY || hoverMode == JSONOptions.HoverEventValueMode.BOTH,
       hoverMode == JSONOptions.HoverEventValueMode.MODERN_ONLY || hoverMode == JSONOptions.HoverEventValueMode.BOTH,
       features.value(JSONOptions.VALIDATE_STRICT_EVENTS),
+      features.value(JSONOptions.SHADOW_COLOR_MODE) != JSONOptions.ShadowColorEmitMode.NONE,
       gson
     ).nullSafe();
   }
@@ -97,6 +100,7 @@ final class StyleSerializer extends TypeAdapter<Style> {
   private final boolean emitLegacyHover;
   private final boolean emitModernHover;
   private final boolean strictEventValues;
+  private final boolean emitShadowColor;
   private final Gson gson;
 
   private StyleSerializer(
@@ -104,12 +108,14 @@ final class StyleSerializer extends TypeAdapter<Style> {
     final boolean emitLegacyHover,
     final boolean emitModernHover,
     final boolean strictEventValues,
+    final boolean emitShadowColor,
     final Gson gson
   ) {
     this.legacyHover = legacyHover;
     this.emitLegacyHover = emitLegacyHover;
     this.emitModernHover = emitModernHover;
     this.strictEventValues = strictEventValues;
+    this.emitShadowColor = emitShadowColor;
     this.gson = gson;
   }
 
@@ -129,6 +135,8 @@ final class StyleSerializer extends TypeAdapter<Style> {
         } else if (color.decoration != null) {
           style.decoration(color.decoration, TextDecoration.State.TRUE);
         }
+      } else if (fieldName.equals(SHADOW_COLOR)) {
+        style.shadowColor(this.gson.fromJson(in, SerializerFactory.SHADOW_COLOR_TYPE));
       } else if (TextDecoration.NAMES.keys().contains(fieldName)) {
         style.decoration(TextDecoration.NAMES.value(fieldName), GsonHacks.readBoolean(in));
       } else if (fieldName.equals(INSERTION)) {
@@ -264,6 +272,12 @@ final class StyleSerializer extends TypeAdapter<Style> {
     if (color != null) {
       out.name(COLOR);
       this.gson.toJson(color, SerializerFactory.COLOR_TYPE, out);
+    }
+
+    final @Nullable ShadowColor shadowColor = value.shadowColor();
+    if (shadowColor != null && this.emitShadowColor) {
+      out.name(SHADOW_COLOR);
+      this.gson.toJson(shadowColor, SerializerFactory.SHADOW_COLOR_TYPE, out);
     }
 
     final @Nullable String insertion = value.insertion();

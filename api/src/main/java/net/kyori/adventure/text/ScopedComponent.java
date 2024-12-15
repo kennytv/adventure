@@ -31,6 +31,7 @@ import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.util.ARGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -105,6 +106,18 @@ public interface ScopedComponent<C extends Component> extends Component {
   @SuppressWarnings("unchecked")
   default @NotNull C colorIfAbsent(final @Nullable TextColor color) {
     return (C) Component.super.colorIfAbsent(color);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C shadowColor(final @Nullable ARGBLike argb) {
+    return (C) Component.super.shadowColor(argb);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    return (C) Component.super.shadowColorIfAbsent(argb);
   }
 
   @Override

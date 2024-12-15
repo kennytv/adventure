@@ -36,6 +36,7 @@ import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.util.ARGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -233,6 +234,20 @@ abstract class AbstractComponentBuilder<C extends BuildableComponent<C, B>, B ex
   @SuppressWarnings("unchecked")
   public @NotNull B colorIfAbsent(final @Nullable TextColor color) {
     this.styleBuilder().colorIfAbsent(color);
+    return (B) this;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public @NotNull B shadowColor(final @Nullable ARGBLike argb) {
+    this.styleBuilder().shadowColor(argb);
+    return (B) this;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public @NotNull B shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    this.styleBuilder().shadowColorIfAbsent(argb);
     return (B) this;
   }
 

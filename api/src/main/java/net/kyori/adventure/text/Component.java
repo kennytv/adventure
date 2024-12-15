@@ -45,6 +45,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import net.kyori.adventure.text.format.StyleGetter;
@@ -53,6 +54,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.translation.Translatable;
+import net.kyori.adventure.util.ARGBLike;
 import net.kyori.adventure.util.ForwardingIterator;
 import net.kyori.adventure.util.IntFunction2;
 import net.kyori.adventure.util.MonkeyBars;
@@ -2189,6 +2191,11 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
     return this.style().color();
   }
 
+  @Override
+  default @Nullable ShadowColor shadowColor() {
+    return this.style().shadowColor();
+  }
+
   /**
    * Sets the color of this component.
    *
@@ -2213,6 +2220,33 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   @Override
   default @NotNull Component colorIfAbsent(final @Nullable TextColor color) {
     if (this.color() == null) return this.color(color);
+    return this;
+  }
+
+  /**
+   * Sets the shadow color of this component.
+   *
+   * @param argb the color
+   * @return a component
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  @Override
+  default @NotNull Component shadowColor(final @Nullable ARGBLike argb) {
+    return this.style(this.style().shadowColor(argb));
+  }
+
+  /**
+   * Sets the shadow color if there isn't one set already.
+   *
+   * @param argb the color
+   * @return a component
+   * @since 4.18.0
+   */
+  @Contract(pure = true)
+  @Override
+  default @NotNull Component shadowColorIfAbsent(final @Nullable ARGBLike argb) {
+    if (this.shadowColor() == null) return this.shadowColor(argb);
     return this;
   }
 

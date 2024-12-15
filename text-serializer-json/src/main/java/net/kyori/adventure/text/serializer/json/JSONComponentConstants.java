@@ -51,6 +51,7 @@ public final class JSONComponentConstants {
   public static final String SEPARATOR = "separator";
   public static final String FONT = "font";
   public static final String COLOR = "color";
+  public static final String SHADOW_COLOR = "shadow_color";
   public static final String INSERTION = "insertion";
   public static final String CLICK_EVENT = "clickEvent";
   public static final String CLICK_EVENT_ACTION = "action";
