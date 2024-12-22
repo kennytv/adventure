@@ -4,7 +4,8 @@
   ],
   "ignoreDeps": [
     "com.google.code.gson:gson",
-    "org.slf4j:slf4j-api"
+    "org.slf4j:slf4j-api",
+    "org.jetbrains.kotlin.jvm"
   ],
   "packageRules": [
     {
