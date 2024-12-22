@@ -23,6 +23,7 @@
  */
 package net.kyori.adventure.text.serializer.json;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Collections;
 import net.kyori.adventure.key.Key;
@@ -31,6 +32,7 @@ import net.kyori.adventure.nbt.StringBinaryTag;
 import net.kyori.adventure.nbt.TagStringIO;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.DataComponentValue;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.junit.jupiter.api.Test;
 
@@ -119,6 +121,32 @@ final class ShowItemSerializerTest extends SerializerTest {
             contents.addProperty(JSONComponentConstants.SHOW_ITEM_ID, "minecraft:diamond");
             contents.addProperty(JSONComponentConstants.SHOW_ITEM_COUNT, 1);
             contents.addProperty(JSONComponentConstants.SHOW_ITEM_TAG, "{display:{Name:\"A test!\"}}");
+          }));
+        }));
+      }
+    );
+  }
+
+  @Test
+  void testDeserializeWithRemovedComponent() {
+    this.testObject(
+      Component.text().hoverEvent(
+        HoverEvent.showItem(
+          Key.key("minecraft", "diamond"),
+          2,
+          Collections.singletonMap(Key.key("minecraft", "damage"), DataComponentValue.removed())
+        )
+      ).build(),
+      json -> {
+        json.addProperty(JSONComponentConstants.TEXT, "");
+        json.add(JSONComponentConstants.HOVER_EVENT, object(hover -> {
+          hover.addProperty(JSONComponentConstants.HOVER_EVENT_ACTION, name(HoverEvent.Action.SHOW_ITEM));
+          hover.add(JSONComponentConstants.HOVER_EVENT_CONTENTS, object(contents -> {
+            contents.addProperty(JSONComponentConstants.SHOW_ITEM_ID, "minecraft:diamond");
+            contents.addProperty(JSONComponentConstants.SHOW_ITEM_COUNT, 2);
+            contents.add(JSONComponentConstants.SHOW_ITEM_COMPONENTS, object(comps -> {
+              comps.add("!minecraft:damage", new JsonObject());
+            }));
           }));
         }));
       }
