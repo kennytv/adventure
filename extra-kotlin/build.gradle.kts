@@ -12,7 +12,7 @@ kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_1_8
     @Suppress("DEPRECATION")
-    languageVersion = KotlinVersion.KOTLIN_1_4
+    languageVersion = KotlinVersion.KOTLIN_1_6
   }
 }
 
