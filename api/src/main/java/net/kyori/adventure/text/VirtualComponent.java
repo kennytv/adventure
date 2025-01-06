@@ -23,15 +23,18 @@
  */
 package net.kyori.adventure.text;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * A virtual component.
  *
- * <p>This component type is transient, and not guaranteed to survive during any sort of transformations or serialization.</p>
+ * <p>This component type is transient and not guaranteed to survive during any sort of transformations or serialization.</p>
  *
+ * @see Component#virtual(Class, VirtualComponentRenderer)
  * @since 4.18.0
  */
+@ApiStatus.NonExtendable
 public interface VirtualComponent extends TextComponent {
   /**
    * Gets the renderer context type.
