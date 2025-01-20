@@ -322,4 +322,16 @@ class TextReplacementRendererTest {
 
     TextAssertions.assertEquals(expected, replaced);
   }
+
+  @Test
+  void testIgnoringHover() {
+    final Component original = Component.text("one")
+      .hoverEvent(Component.text("meow"));
+
+    final Component replaced = original.replaceText(c -> c.match("meow")
+      .replacement(Component.text("woof"))
+      .replaceInsideHoverEvents(false));
+
+    TextAssertions.assertEquals(original, replaced);
+  }
 }
