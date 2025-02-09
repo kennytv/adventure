@@ -2559,6 +2559,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @return the optimized component
    * @since 4.9.0
    */
+  @ScopedComponentOverrideNotRequired
   default @NotNull Component compact() {
     return ComponentCompaction.compact(this, null);
   }
