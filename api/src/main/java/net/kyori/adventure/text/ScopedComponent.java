@@ -209,18 +209,6 @@ public interface ScopedComponent<C extends Component> extends Component {
 
   @Override
   @SuppressWarnings("unchecked")
-  default @NotNull C replaceText(final @NotNull Consumer<TextReplacementConfig.Builder> configurer) {
-    return (C) Component.super.replaceText(configurer);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  default @NotNull C replaceText(final @NotNull TextReplacementConfig config) {
-    return (C) Component.super.replaceText(config);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
   default @NotNull C font(final @Nullable Key key) {
     return (C) Component.super.font(key);
   }
