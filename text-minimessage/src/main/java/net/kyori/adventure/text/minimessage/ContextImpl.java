@@ -49,6 +49,7 @@ class ContextImpl implements Context {
   private static final Token[] EMPTY_TOKEN_ARRAY = new Token[0];
 
   private final boolean strict;
+  private final boolean emitVirtuals;
   private final Consumer<String> debugOutput;
   private String message;
   private final MiniMessage miniMessage;
@@ -59,6 +60,7 @@ class ContextImpl implements Context {
 
   ContextImpl(
     final boolean strict,
+    final boolean emitVirtuals,
     final Consumer<String> debugOutput,
     final String message,
     final MiniMessage miniMessage,
@@ -68,6 +70,7 @@ class ContextImpl implements Context {
     final @Nullable UnaryOperator<Component> postProcessor
   ) {
     this.strict = strict;
+    this.emitVirtuals = emitVirtuals;
     this.debugOutput = debugOutput;
     this.message = message;
     this.miniMessage = miniMessage;
@@ -79,6 +82,11 @@ class ContextImpl implements Context {
 
   public boolean strict() {
     return this.strict;
+  }
+
+  @Override
+  public boolean emitVirtuals() {
+    return this.emitVirtuals;
   }
 
   public Consumer<String> debugOutput() {

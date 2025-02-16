@@ -95,10 +95,11 @@ class GradientTag extends AbstractColorChangingTag {
       textColors = Collections.emptyList();
     }
 
-    return new GradientTag(phase, textColors);
+    return new GradientTag(phase, textColors, ctx);
   }
 
-  GradientTag(final double phase, final List<TextColor> colors) {
+  GradientTag(final double phase, final List<TextColor> colors, final Context ctx) {
+    super(ctx);
     if (colors.isEmpty()) {
       this.colors = new TextColor[]{DEFAULT_WHITE, DEFAULT_BLACK};
     } else {

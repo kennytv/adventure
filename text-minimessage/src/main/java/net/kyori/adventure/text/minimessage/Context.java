@@ -140,4 +140,13 @@ public interface Context {
     final @Nullable Throwable cause,
     final @NotNull ArgumentQueue args
   );
+
+  /**
+   * Dictates if transformations may emit virtual components or not.
+   *
+   * @return the boolean flag, {@code true} if transformations may
+   *     emit virtuals, {@code false} otherwise.
+   * @since 4.19.0
+   */
+  boolean emitVirtuals();
 }

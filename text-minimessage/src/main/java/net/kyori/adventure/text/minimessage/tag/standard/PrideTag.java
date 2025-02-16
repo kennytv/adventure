@@ -104,13 +104,13 @@ final class PrideTag extends GradientTag {
       }
     }
 
-    return new PrideTag(phase, FLAGS.get(flag), flag);
+    return new PrideTag(phase, FLAGS.get(flag), flag, ctx);
   }
 
   private final String flag;
 
-  PrideTag(final double phase, final @NotNull List<@NotNull TextColor> colors, final @NotNull String flag) {
-    super(phase, colors);
+  PrideTag(final double phase, final @NotNull List<@NotNull TextColor> colors, final @NotNull String flag, final Context ctx) {
+    super(phase, colors, ctx);
     this.flag = flag;
   }
 

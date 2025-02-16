@@ -35,6 +35,7 @@ import net.kyori.adventure.text.VirtualComponent;
 import net.kyori.adventure.text.VirtualComponentRenderer;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.Context;
 import net.kyori.adventure.text.minimessage.internal.parser.node.TagNode;
 import net.kyori.adventure.text.minimessage.internal.parser.node.ValueNode;
 import net.kyori.adventure.text.minimessage.internal.serializer.Emitable;
@@ -69,6 +70,11 @@ abstract class AbstractColorChangingTag implements Modifying, Examinable {
   private boolean visited;
   private int size = 0;
   private int disableApplyingColorDepth = -1;
+  private final boolean emitVirtuals;
+
+  AbstractColorChangingTag(final Context ctx) {
+    this.emitVirtuals = ctx.emitVirtuals();
+  }
 
   protected final int size() {
     return this.size;
@@ -101,7 +107,7 @@ abstract class AbstractColorChangingTag implements Modifying, Examinable {
 
   @Override
   public final Component apply(final @NotNull Component current, final int depth) {
-    if (depth == 0) {
+    if (this.emitVirtuals && depth == 0) {
       // capture state into a virtual component, no other logic is needed in normal MM handling
       return Component.virtual(Void.class, new TagInfoHolder(this.preserveData(), current), current.style());
     }

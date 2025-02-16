@@ -28,6 +28,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.AbstractTest;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.junit.jupiter.api.Test;
 
@@ -639,5 +640,18 @@ class GradientTagTest extends AbstractTest {
     final Component parsed = PARSER.deserialize(input);
 
     this.assertSerializedEquals(input, parsed);
+  }
+
+  // https://github.com/KyoriPowered/adventure/issues/1163
+  @Test
+  void testDisabledVirtualComponentEmission() {
+    final String input = "<b><gradient:white:blue>A";
+    final Component expected = text("A", WHITE, TextDecoration.BOLD);
+
+    this.assertParsedEquals(
+      MiniMessage.builder().emitVirtuals(false).build(),
+      expected,
+      input
+    );
   }
 }

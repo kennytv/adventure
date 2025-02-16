@@ -24,6 +24,7 @@
 package net.kyori.adventure.text.minimessage.tag.standard;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.AbstractTest;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.junit.jupiter.api.Test;
@@ -386,5 +387,18 @@ class RainbowTagTest extends AbstractTest {
     );
 
     this.assertParsedEquals(expected, input);
+  }
+
+  // https://github.com/KyoriPowered/adventure/issues/1163
+  @Test
+  void testDisabledVirtualComponentEmission() {
+    final String input = "<b><rainbow>A";
+    final Component expected = text("A", color(0xff0000), TextDecoration.BOLD);
+
+    this.assertParsedEquals(
+      MiniMessage.builder().emitVirtuals(false).build(),
+      expected,
+      input
+    );
   }
 }
