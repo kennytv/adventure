@@ -73,10 +73,11 @@ final class RainbowTag extends AbstractColorChangingTag {
       }
     }
 
-    return new RainbowTag(reversed, phase);
+    return new RainbowTag(reversed, phase, ctx);
   }
 
-  private RainbowTag(final boolean reversed, final int phase) {
+  private RainbowTag(final boolean reversed, final int phase, final Context ctx) {
+    super(ctx);
     this.reversed = reversed;
     this.dividedPhase = ((double) phase) / 10d;
   }

@@ -347,6 +347,23 @@ public interface MiniMessage extends ComponentSerializer<Component, Component, S
     @NotNull Builder strict(final boolean strict);
 
     /**
+     * Configures if MiniMessage should emit virtual components (enabled by default).
+     *
+     * <p>
+     * Emitting virtual components may enable MiniMessage to more accurately reconstruct
+     * the source string representation when serializing a component by inserting virtual components
+     * during deserialization.
+     * Emitting virtual components will, however, break equality to components deserialized from
+     * MiniMessage instances that do not emit virtual components.
+     * </p>
+     *
+     * @param emitVirtuals if virtual components should be emitted.
+     * @return this builder.
+     * @since 4.19.0
+     */
+    @NotNull Builder emitVirtuals(final boolean emitVirtuals);
+
+    /**
      * Print debug information to the given output (disabled by default).
      *
      * <p>Debug output includes detailed information about the parsing process to help debug parser behavior.</p>
