@@ -2532,6 +2532,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @since 4.2.0
    */
   @Contract(pure = true)
+  @ScopedComponentOverrideNotRequired
   default @NotNull Component replaceText(final @NotNull Consumer<TextReplacementConfig.Builder> configurer) {
     requireNonNull(configurer, "configurer");
     return this.replaceText(AbstractBuilder.configureAndBuild(TextReplacementConfig.builder(), configurer));
@@ -2545,6 +2546,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @since 4.2.0
    */
   @Contract(pure = true)
+  @ScopedComponentOverrideNotRequired
   default @NotNull Component replaceText(final @NotNull TextReplacementConfig config) {
     requireNonNull(config, "replacement");
     if (!(config instanceof TextReplacementConfigImpl)) {
@@ -2559,6 +2561,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @return the optimized component
    * @since 4.9.0
    */
+  @ScopedComponentOverrideNotRequired
   default @NotNull Component compact() {
     return ComponentCompaction.compact(this, null);
   }

@@ -24,11 +24,14 @@
 package net.kyori.adventure.text;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.util.ARGBLike;
@@ -42,6 +45,12 @@ import org.jetbrains.annotations.Nullable;
  * @since 4.0.0
  */
 public interface ScopedComponent<C extends Component> extends Component {
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C asComponent() {
+    return (C) Component.super.asComponent();
+  }
+
   @Override
   @NotNull C children(final @NotNull List<? extends ComponentLike> children);
 
@@ -58,6 +67,12 @@ public interface ScopedComponent<C extends Component> extends Component {
   @SuppressWarnings("unchecked")
   default @NotNull C style(final Style.@NotNull Builder style) {
     return (C) Component.super.style(style);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C style(final @NotNull Consumer<Style.Builder> consumer, final Style.Merge.@NotNull Strategy strategy) {
+    return (C) Component.super.style(consumer, strategy);
   }
 
   @Override
@@ -88,6 +103,30 @@ public interface ScopedComponent<C extends Component> extends Component {
   @SuppressWarnings("unchecked")
   default @NotNull C append(final @NotNull ComponentBuilder<?, ?> builder) {
     return (C) Component.super.append(builder);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C appendNewline() {
+    return (C) Component.super.appendNewline();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C appendSpace() {
+    return (C) Component.super.appendSpace();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C applyFallbackStyle(final @NotNull StyleBuilderApplicable @NotNull ... style) {
+    return (C) Component.super.applyFallbackStyle(style);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C applyFallbackStyle(final @NotNull Style style) {
+    return (C) Component.super.applyFallbackStyle(style);
   }
 
   @Override
@@ -140,6 +179,18 @@ public interface ScopedComponent<C extends Component> extends Component {
 
   @Override
   @SuppressWarnings("unchecked")
+  default @NotNull C decorationIfAbsent(final @NotNull TextDecoration decoration, final TextDecoration.@NotNull State state) {
+    return (C) Component.super.decorationIfAbsent(decoration, state);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C decorations(final @NotNull Map<TextDecoration, TextDecoration.State> decorations) {
+    return (C) Component.super.decorations(decorations);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
   default @NotNull C clickEvent(final @Nullable ClickEvent event) {
     return (C) Component.super.clickEvent(event);
   }
@@ -154,5 +205,11 @@ public interface ScopedComponent<C extends Component> extends Component {
   @SuppressWarnings("unchecked")
   default @NotNull C insertion(final @Nullable String insertion) {
     return (C) Component.super.insertion(insertion);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  default @NotNull C font(final @Nullable Key key) {
+    return (C) Component.super.font(key);
   }
 }
