@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import org.jetbrains.annotations.Nullable;
 
 final class TagStringReader {
   private static final int MAX_DEPTH = 512;
@@ -262,30 +263,12 @@ final class TagStringReader {
 
     // Start stripping down the string so we can use Java's number parsing instead of having to write our own.
     // Determine the radix and strip its prefix if present
-    final char first = builder.charAt(0);
-    int radixPrefixOffset = 0;
-    final int radix;
-    if (first == '+' || first == '-') {
-      radixPrefixOffset = 1;
-    }
-    if (original.startsWith("0b", radixPrefixOffset) || original.startsWith("0B", radixPrefixOffset)) {
-      radix = BINARY_RADIX;
-    } else if (original.startsWith("0x", radixPrefixOffset) || original.startsWith("0X", radixPrefixOffset)) {
-      radix = HEX_RADIX;
-    } else {
-      radix = DECIMAL_RADIX;
-    }
-    if (radix != DECIMAL_RADIX) {
-      builder.delete(radixPrefixOffset, 2 + radixPrefixOffset);
-    }
-
-    final char last = builder.charAt(builder.length() - 1);
-    boolean hasTypeToken = Tokens.numericType(last);
-    char typeToken = hasTypeToken ? Character.toLowerCase(last) : Tokens.TYPE_INT;
-    boolean hasSignToken = false;
-    boolean signed = radix != HEX_RADIX; // hex defaults to unsigned
+    final int radix = this.extractRadix(builder, original);
 
     // Check for the sign before removing the type token because of hex number always needing a sign thanks to byte types
+    final char last = builder.charAt(builder.length() - 1);
+    boolean hasSignToken = false;
+    boolean signed = radix != HEX_RADIX; // hex defaults to unsigned
     if (builder.length() > 2) {
       final char signChar = builder.charAt(builder.length() - 2);
       if (signChar == Tokens.TYPE_SIGNED || signChar == Tokens.TYPE_UNSIGNED) {
@@ -294,15 +277,16 @@ final class TagStringReader {
         builder.deleteCharAt(builder.length() - 2);
       }
     }
-    if (hasTypeToken) {
-      if (!hasSignToken && radix == HEX_RADIX) {
-        // We fell into the hex trap!
-        hasTypeToken = false;
-        typeToken = Tokens.TYPE_INT;
-      } else {
-        builder.deleteCharAt(builder.length() - 1);
-      }
+
+    // Check for the type token and make sure we didn't fall into the hex trap (e.g. 0xAB)
+    boolean hasTypeToken = false;
+    char typeToken = Tokens.TYPE_INT;
+    if (Tokens.numericType(last) && (hasSignToken || radix != HEX_RADIX)) {
+      hasTypeToken = true;
+      typeToken = Character.toLowerCase(last);
+      builder.deleteCharAt(builder.length() - 1);
     }
+
     if (!signed && (typeToken == Tokens.TYPE_FLOAT || typeToken == Tokens.TYPE_DOUBLE)) {
       throw this.buffer.makeError("Cannot create unsigned floating point numbers");
     }
@@ -310,27 +294,9 @@ final class TagStringReader {
     final String strippedString = builder.toString().replace("_", "");
     if (hasTypeToken) {
       try {
-        switch (typeToken) {
-          case Tokens.TYPE_BYTE:
-            return ByteBinaryTag.byteBinaryTag(this.parseByte(strippedString, radix, signed));
-          case Tokens.TYPE_SHORT:
-            return ShortBinaryTag.shortBinaryTag(this.parseShort(strippedString, radix, signed));
-          case Tokens.TYPE_INT:
-            return IntBinaryTag.intBinaryTag(this.parseInt(strippedString, radix, signed));
-          case Tokens.TYPE_LONG:
-            return LongBinaryTag.longBinaryTag(this.parseLong(strippedString, radix, signed));
-          case Tokens.TYPE_FLOAT:
-            final float floatValue = Float.parseFloat(strippedString);
-            if (Float.isFinite(floatValue)) { // don't accept NaN and Infinity
-              return FloatBinaryTag.floatBinaryTag(floatValue);
-            }
-            break;
-          case Tokens.TYPE_DOUBLE:
-            final double doubleValue = Double.parseDouble(strippedString);
-            if (Double.isFinite(doubleValue)) { // don't accept NaN and Infinity
-              return DoubleBinaryTag.doubleBinaryTag(doubleValue);
-            }
-            break;
+        final NumberBinaryTag tag = this.parseNumberTag(strippedString, typeToken, radix, signed);
+        if (tag != null) {
+          return tag;
         }
       } catch (final NumberFormatException ignored) {
         // not a numeric tag of the appropriate type
@@ -355,6 +321,52 @@ final class TagStringReader {
       return ByteBinaryTag.ZERO;
     }
     return StringBinaryTag.stringBinaryTag(original);
+  }
+
+  private int extractRadix(final StringBuilder builder, final String original) {
+    int radixPrefixOffset = 0;
+    final int radix;
+    final char first = builder.charAt(0);
+    if (first == '+' || first == '-') {
+      radixPrefixOffset = 1;
+    }
+    if (original.startsWith("0b", radixPrefixOffset) || original.startsWith("0B", radixPrefixOffset)) {
+      radix = BINARY_RADIX;
+    } else if (original.startsWith("0x", radixPrefixOffset) || original.startsWith("0X", radixPrefixOffset)) {
+      radix = HEX_RADIX;
+    } else {
+      radix = DECIMAL_RADIX;
+    }
+    if (radix != DECIMAL_RADIX) {
+      builder.delete(radixPrefixOffset, 2 + radixPrefixOffset);
+    }
+    return radix;
+  }
+
+  private @Nullable NumberBinaryTag parseNumberTag(final String s, final char typeToken, final int radix, final boolean signed) {
+    switch (typeToken) {
+      case Tokens.TYPE_BYTE:
+        return ByteBinaryTag.byteBinaryTag(this.parseByte(s, radix, signed));
+      case Tokens.TYPE_SHORT:
+        return ShortBinaryTag.shortBinaryTag(this.parseShort(s, radix, signed));
+      case Tokens.TYPE_INT:
+        return IntBinaryTag.intBinaryTag(this.parseInt(s, radix, signed));
+      case Tokens.TYPE_LONG:
+        return LongBinaryTag.longBinaryTag(this.parseLong(s, radix, signed));
+      case Tokens.TYPE_FLOAT:
+        final float floatValue = Float.parseFloat(s);
+        if (Float.isFinite(floatValue)) { // don't accept NaN and Infinity
+          return FloatBinaryTag.floatBinaryTag(floatValue);
+        }
+        break;
+      case Tokens.TYPE_DOUBLE:
+        final double doubleValue = Double.parseDouble(s);
+        if (Double.isFinite(doubleValue)) { // don't accept NaN and Infinity
+          return DoubleBinaryTag.doubleBinaryTag(doubleValue);
+        }
+        break;
+    }
+    return null;
   }
 
   private byte parseByte(final String s, final int radix, final boolean signed) {
